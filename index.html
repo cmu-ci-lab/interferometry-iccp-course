@@ -64,14 +64,14 @@
       <a href="#a8"><span class="side-num">4</span>Scanning a coin</a>
       <a href="#a9"><span class="side-num">5</span>Scanning other objects</a>
       <p class="side-part">Appendix</p>
-      <a href="#parts"><span class="side-num">·</span>Parts and equipment</a>
-      <a href="#software"><span class="side-num">·</span>Software installations</a>
-      <a class="side-sub-link" href="#sw-code">1 · Getting the code</a>
-      <a class="side-sub-link" href="#sw-setup">2 · Python environment</a>
-      <a class="side-sub-link" href="#sw-conda">3 · Manual conda install</a>
-      <a class="side-sub-link" href="#sw-activate">4 · Activating</a>
-      <a class="side-sub-link" href="#sw-sdk">5 · Camera SDK &amp; platforms</a>
-      <a href="#troubleshooting"><span class="side-num">·</span>Troubleshooting</a>
+      <a href="#parts"><span class="side-num">1</span>Parts and equipment</a>
+      <a href="#software"><span class="side-num">2</span>Software installations</a>
+      <a class="side-sub-link" href="#sw-code">a · Getting the code</a>
+      <a class="side-sub-link" href="#sw-setup">b · Python environment</a>
+      <a class="side-sub-link" href="#sw-conda">c · Manual conda install</a>
+      <a class="side-sub-link" href="#sw-activate">d · Activating</a>
+      <a class="side-sub-link" href="#sw-sdk">e · Camera SDK &amp; platforms</a>
+      <a href="#troubleshooting"><span class="side-num">3</span>Troubleshooting</a>
     </nav>
   </aside>
 
@@ -88,7 +88,7 @@
             than filled with stand-in text so the live page never shows a placeholder.-->
         <!--<li><i class="fa-solid fa-calendar-days fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Dates: Summer school dates</li>-->
         <!--<li><i class="fa-solid fa-location-dot fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Location: Lab location</li>-->
-        <!--<li><i class="fa-solid fa-person-chalkboard fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Instructors: <a href="https://instructor.website/">Instructor name</a></li>-->
+        <li><i class="fa-solid fa-person-chalkboard fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Instructors: <a href="https://www.andrew.cmu.edu/user/ssrangan/">Sreekar Ranganathan</a>, <a href="https://www.mianwei.ca/mera">Mian Wei</a>, <a href="https://www.cs.cmu.edu/~igkioule/">Ioannis Gkioulekas</a></li>
         <li><i class="fa-solid fa-code-branch fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Code: <a href="https://github.com/cmu-ci-lab/summer-school">cmu-ci-lab/summer-school</a></li>
         <li><i class="fa-solid fa-file-pdf fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Presentation: <a href="index_files/presentation.pdf">slides (PDF)</a></li>
         <li><nav aria-label="Quick links"><i class="fa-solid fa-bars fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Quick links: <a href="#part1">construction</a>, <a href="#part2">alignment</a>, <a href="#part3">OCT</a>, <a href="#parts">parts</a>, <a href="#software">software</a>, <a href="#troubleshooting">troubleshooting</a></nav></li>
@@ -843,7 +843,7 @@ python oct_scan.py --center 12.3 --range-mm 0.9 --step-mm 0.003</code></pre>
     <!-- ════════════════ APPENDIX ════════════════ -->
     <hr class="soft">
     <section class="step" id="parts">
-      <h3>Parts and equipment</h3>
+      <h3><span class="step-num">1</span>Parts and equipment</h3>
       <p>Check your bench against this list before you start &mdash; a missing part is much
       easier to chase down now than halfway through alignment. The quantity column is left
       blank; fill it in for the kit your benches are issued.</p>
@@ -880,11 +880,11 @@ python oct_scan.py --center 12.3 --range-mm 0.9 --step-mm 0.003</code></pre>
     </section>
 
     <section class="step" id="software">
-      <h3>Software installations</h3>
+      <h3><span class="step-num">2</span>Software installations</h3>
       <p>The rig is a <strong>Thorlabs KDC101-driven motorized stage</strong> plus a monochrome
       machine-vision camera — either <strong>Allied Vision</strong> (via the Vimba&nbsp;X SDK) or
       <strong>IDS uEye</strong> (via pyueye). All the software runs from one Python environment.</p>
-      <h4 id="sw-code">1 · Getting the code</h4>
+      <h4 id="sw-code">a · Getting the code</h4>
       <p>All the scripts live in the same repository as this page —
       <a href="https://github.com/cmu-ci-lab/summer-school">github.com/cmu-ci-lab/summer-school</a> — so if
       you're reading this locally, you already have them. If not:</p>
@@ -898,7 +898,7 @@ cd summer-school</code></pre>
       course — that's the smoothest path. No conda? A plain Python&nbsp;3 install works too:
       <code>setup.sh</code> will build a <code>.venv</code> instead.</div>
 
-      <h4 id="sw-setup">2 · Python environment: setup.sh</h4>
+      <h4 id="sw-setup">b · Python environment: setup.sh</h4>
       <p><code>setup.sh</code> prefers conda if you have it and falls back to a plain <code>.venv</code> if
       you don't. On macOS run it from the Terminal; on Windows, run it from Git&nbsp;Bash (installed with
       <a href="https://git-scm.com/downloads/win">Git for Windows</a>, which you likely already have):</p>
@@ -918,16 +918,16 @@ FORCE_VENV=1 ./setup.sh</code></pre>
         <li>registers a Jupyter kernel and prints the activation command for whatever it built.</li>
       </ul></div>
 
-      <h4 id="sw-conda">3 · Alternative: manual conda install</h4>
+      <h4 id="sw-conda">c · Alternative: manual conda install</h4>
       <p>If you'd rather not run the script and already have conda, create the environment directly from
       <code>environment.yml</code>:</p>
 <pre><code>conda env create -f environment.yml
 conda activate iccp-oct</code></pre>
-      <p>(You'll still need to install your camera's SDK/bindings by hand — see step&nbsp;5 below — and on
+      <p>(You'll still need to install your camera's SDK/bindings by hand — see step&nbsp;e below — and on
       macOS the stage backend: <code>conda install -c conda-forge libusb</code> plus
       <code>pip install pyftdi</code>.)</p>
 
-      <h4 id="sw-activate">4 · Activating the environment</h4>
+      <h4 id="sw-activate">d · Activating the environment</h4>
 <pre><code><span class="cm"># conda path</span>
 conda activate iccp-oct
 <span class="cm"># venv path</span>
@@ -936,7 +936,7 @@ source .venv/bin/activate        <span class="cm"># Windows: .venv\Scripts\activ
       <em>Python: Select Interpreter</em> → <em>Python (iccp-oct)</em> (or <code>./.venv</code>). Some scripts
       can also be run cell-by-cell in the Interactive Window, so it's worth setting this up now.</p>
 
-      <h4 id="sw-sdk">5 · Camera SDK &amp; platform notes</h4>
+      <h4 id="sw-sdk">e · Camera SDK &amp; platform notes</h4>
       <p>This last step depends on your platform and on which camera your rig has — only one camera entry
       applies to you.</p>
 
@@ -996,7 +996,7 @@ source .venv/bin/activate        <span class="cm"># Windows: .venv\Scripts\activ
     </section>
 
     <section class="step" id="troubleshooting">
-      <h3>Troubleshooting</h3>
+      <h3><span class="step-num">3</span>Troubleshooting</h3>
       <p><strong>Plain <code>python</code> fails</strong> (a <code>ModuleNotFoundError</code> for pylablib,
       cv2, vmbpy, … or the hardware suddenly "isn't found") — you're almost certainly running the
       <em>wrong</em> Python: base conda, the system interpreter, or some other environment that happens to be
