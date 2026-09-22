@@ -217,18 +217,28 @@ a.side-title:hover, a.side-title:focus { color: var(--accent); }
 	font-size: 125%;
 	font-weight: bold;
 }
-h1 { font-size: 34px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -.015em; text-wrap: balance; }
+/* Matches the course template's h1: browser-default 2em at 0.67em margins, with the base
+   sheet's colour and balanced wrapping. The explicit line-height reproduces the course
+   h1's 1.3 line box, which it inherits from a body this page sets to 1.65. The colour is
+   load-bearing now that the title is wrapped in a link. */
+h1 {
+	font-size: 2em;
+	line-height: 1.3;
+	margin: 0.67em 0;
+	color: var(--text);
+	text-wrap: balance;
+}
 .doc-sub { font-size: 17px; color: var(--text-2); margin: 0 0 20px; text-wrap: pretty; }
 
 ul.details {
-	margin: 0 0 1.5em 0;
+	margin: 0 0 1em 0;
 	padding-left: 0;
 	list-style-type: none;
 	font-weight: bold;
 	font-size: 110%;
 }
 
-ul.details > li { margin: 0 1em 0.35em 0; }
+ul.details > li { margin: 0 1em 0.5em 0; }
 
 /* Teaser figure in the header, spanning the content column like the lab templates. */
 #teaser { margin: 0 0 8px; }
