@@ -15,23 +15,32 @@
 /* ── Palette (light) ── */
 :root {
 	color-scheme: light dark;
-	--bg:          #fff;
-	--sidebar:     #f0f0f0;
-	--surface:     #f0f0f0;
-	--line:        #ddd;
-	--line-strong: #c0c0c0;
-	--text:        #000;
-	--text-2:      #444;
-	--muted:       #666;
-	--link:        #1772d0;
-	--accent:      #b35500;
-	--accent-bg:   #fff3e0;
-	/* Same hues, darkened just enough to clear WCAG AA on the --surface grey that
-	   callouts, code blocks and theory panels sit on (#b35500 is 4.37:1 there). */
+
+	/* Shared with the lab base sheet (website_templates/shared/style.css): same names, same
+	   values, so the two :root blocks can be diffed line for line. --body-font is a superset
+	   - it also names the system 'Avenir Next' that ships with macOS and iOS, so Apple
+	   readers get the right face if the webfont is unavailable. Adding those two names to
+	   the base sheet would make this line identical too. */
+	--text:          #000;
+	--link:          #1772d0;
+	--accent:        #b35500;
+	--surface:       #f0f0f0;
+	--border-strong: #c0c0c0;
+	--border-soft:   #ddd;
+	--award-bg:      #fff3e0;
+	--body-font:     'Avenir Next Pro', 'Avenir Next', Avenir, 'Lato', Verdana, Helvetica, sans-serif;
+
+	/* Specific to this guide. The base sheet has no equivalents: it is light-only, so it
+	   needs no explicit page background, and it has no long-form components that call for a
+	   secondary or muted text tone. The -on-surface pair are the shared hues darkened just
+	   enough to clear WCAG AA on the --surface grey that callouts, code blocks and theory
+	   panels sit on (#b35500 is 4.37:1 there, #1772d0 is 4.23:1). */
+	--bg:                #fff;
+	--text-2:            #444;
+	--muted:             #666;
+	--kbd-bg:            #fff;
 	--link-on-surface:   #166dc7;
 	--accent-on-surface: #af5300;
-	--kbd-bg:      #fff;
-	--body-font:   'Avenir Next Pro', 'Avenir Next', Avenir, 'Lato', Verdana, Helvetica, sans-serif;
 }
 
 /* ── Palette (dark) ──
@@ -40,20 +49,20 @@
    long enough to be read in a dim optics room, so both schemes are maintained here. */
 @media (prefers-color-scheme: dark) {
 	:root {
-		--bg:          #141414;
-		--sidebar:     #1e1e1e;
-		--surface:     #1e1e1e;
-		--line:        #333;
-		--line-strong: #4a4a4a;
-		--text:        #eee;
-		--text-2:      #c0c0c0;
-		--muted:       #9a9a9a;
-		--link:        #5ba3e8;
-		--accent:      #e08a45;
-		--accent-bg:   #2e2216;
+		--text:          #eee;
+		--link:          #5ba3e8;
+		--accent:        #e08a45;
+		--surface:       #1e1e1e;
+		--border-strong: #4a4a4a;
+		--border-soft:   #333;
+		--award-bg:      #2e2216;
+
+		--bg:                #141414;
+		--text-2:            #c0c0c0;
+		--muted:             #9a9a9a;
+		--kbd-bg:            #2a2a28;
 		--link-on-surface:   #5ba3e8;
 		--accent-on-surface: #e08a45;
-		--kbd-bg:      #2a2a28;
 	}
 }
 
@@ -170,8 +179,8 @@ body {
 .layout { display: flex; min-height: 100vh; }
 .sidebar {
 	width: 280px; flex: 0 0 280px;
-	background: var(--sidebar);
-	border-right: 1px solid var(--line-strong);
+	background: var(--surface);
+	border-right: 1px solid var(--border-strong);
 	padding: 32px 20px 32px 28px;
 	box-sizing: border-box;
 	position: sticky; top: 0; height: 100vh; overflow-y: auto;
@@ -186,7 +195,7 @@ body {
    fixed 280px, so below roughly 860px the content column stops being readable. */
 @media (max-width: 53.75em) {
 	.layout { display: block; }
-	.sidebar { position: static; width: auto; height: auto; border-right: none; border-bottom: 1px solid var(--line-strong); }
+	.sidebar { position: static; width: auto; height: auto; border-right: none; border-bottom: 1px solid var(--border-strong); }
 	.content { padding: 32px 20px 64px; }
 }
 
@@ -253,7 +262,7 @@ ul.details > li { margin: 0 1em 0.5em 0; }
 /* ── Part banners & sections ── */
 .part {
 	display: flex; align-items: baseline; gap: 12px;
-	margin: 56px 0 8px; padding-top: 24px; border-top: 2px solid var(--line-strong);
+	margin: 56px 0 8px; padding-top: 24px; border-top: 2px solid var(--border-strong);
 }
 .part-tag {
 	font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
@@ -270,13 +279,13 @@ ul.details > li { margin: 0 1em 0.5em 0; }
 }
 .step-num {
 	flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%;
-	background: var(--surface); border: 1px solid var(--line-strong); color: var(--text-2);
+	background: var(--surface); border: 1px solid var(--border-strong); color: var(--text-2);
 	font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
 	font-variant-numeric: tabular-nums;
 }
 .step h4 {
 	font-size: 16.5px; margin: 26px 0 8px; padding-bottom: 4px;
-	border-bottom: 1px solid var(--line);
+	border-bottom: 1px solid var(--border-soft);
 }
 .step ol.sub { margin: 8px 0 8px; padding-left: 22px; list-style: lower-alpha; }
 .step ol.sub > li { margin: 8px 0; color: var(--text); }
@@ -286,7 +295,7 @@ ul.details > li { margin: 0 1em 0.5em 0; }
 /* ── Figures ── */
 figure { margin: 14px 0; }
 figure video {
-	border-radius: 0.25em; border: 1px solid var(--line-strong);
+	border-radius: 0.25em; border: 1px solid var(--border-strong);
 	display: block; max-width: 100%; height: auto; background: #000;
 }
 .vid-badge {
@@ -299,7 +308,7 @@ figure video {
 .vidgrid figure { flex: 0 1 260px; min-width: 0; margin: 0; }
 .figgrid { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
 .figgrid img, figure > img {
-	border-radius: 0.25em; border: 1px solid var(--line-strong);
+	border-radius: 0.25em; border: 1px solid var(--border-strong);
 	display: block; max-width: 100%; height: auto;
 }
 .figgrid img { flex: 1 1 220px; min-width: 0; max-width: 360px; object-fit: cover; }
@@ -327,8 +336,8 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
 .optionrow { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
 .optioncard {
 	flex: 1 1 220px; min-width: 0;
-	border: 1px solid var(--line-strong);
-	border-top: 3px solid var(--line-strong);
+	border: 1px solid var(--border-strong);
+	border-top: 3px solid var(--border-strong);
 	border-radius: 0.25em;
 	padding: 12px 14px;
 	background: var(--surface);
@@ -351,7 +360,7 @@ table { border-collapse: collapse; width: 100%; }
 
 td, th {
 	padding: 0.4em 0.5em;
-	border: 1px solid var(--line-strong);
+	border: 1px solid var(--border-strong);
 	text-align: left;
 	vertical-align: top;
 }
@@ -371,18 +380,18 @@ td a:hover, td a:focus, td a:active { color: var(--accent-on-surface); }
 /* ── Callouts ── */
 .note, .warn {
 	border-radius: 0.25em; padding: 12px 16px; margin: 14px 0; font-size: 14.5px;
-	border: 1px solid var(--line-strong); background: var(--surface);
+	border: 1px solid var(--border-strong); background: var(--surface);
 }
 .note strong:first-of-type { color: var(--link-on-surface); }
 .note > i, .warn > i { margin-right: 0.15em; }
 .note > i { color: var(--link-on-surface); }
-.warn { background: var(--accent-bg); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.warn { background: var(--award-bg); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
 .warn strong:first-of-type, .warn > i { color: var(--accent); }
 .tip strong:first-of-type, .tip > i { color: var(--accent-on-surface); }
 
 /* ── Theory panel & math ── */
 .theory {
-	border: 1px solid var(--line-strong); border-left: 3px solid var(--accent);
+	border: 1px solid var(--border-strong); border-left: 3px solid var(--accent);
 	background: var(--surface); border-radius: 0.25em;
 	padding: 14px 18px; margin: 18px 0; font-size: 15px;
 }
@@ -407,7 +416,7 @@ td a:hover, td a:focus, td a:active { color: var(--accent-on-surface); }
 pre, code {
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 	background-color: var(--surface);
-	border: 1px solid var(--line);
+	border: 1px solid var(--border-soft);
 	border-radius: 0.25em;
 }
 pre {
@@ -422,7 +431,7 @@ pre .dim { color: var(--muted); }
 pre .ok { color: var(--accent-on-surface); font-weight: 700; }
 kbd {
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px;
-	background: var(--kbd-bg); border: 1px solid var(--line-strong);
+	background: var(--kbd-bg); border: 1px solid var(--border-strong);
 	border-bottom-width: 2px; border-radius: 0.25em; padding: 1px 7px;
 }
 
@@ -431,7 +440,7 @@ a { color: var(--link); text-decoration: none; }
 a:focus, a:hover, a:active { color: var(--accent); text-decoration: none; }
 .note a:hover, .note a:focus, .warn a:hover, .warn a:focus,
 .theory a:hover, .theory a:focus, pre a:hover, pre a:focus { color: var(--accent-on-surface); }
-hr.soft { border: none; border-top: 1px solid var(--line); margin: 48px 0 0; }
+hr.soft { border: none; border-top: 1px solid var(--border-soft); margin: 48px 0 0; }
 ul.plain { padding-left: 22px; }
 ul.plain li { margin: 6px 0; }
 
@@ -443,7 +452,7 @@ footer {
 	font-style: italic;
 	margin-top: 40px;
 	padding-top: 16px;
-	border-top: 1px solid var(--line);
+	border-top: 1px solid var(--border-soft);
 }
 
 footer p { margin: 6px 0; }
@@ -476,7 +485,7 @@ footer p { margin: 6px 0; }
 	clip: auto;
 	clip-path: none;
 	background: var(--surface);
-	border: 1px solid var(--line-strong);
+	border: 1px solid var(--border-strong);
 	z-index: 100;
 }
 
