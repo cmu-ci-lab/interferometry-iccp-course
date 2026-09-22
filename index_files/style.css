@@ -181,11 +181,9 @@ body {
 	.layout { display: block; }
 	.sidebar { position: static; width: auto; height: auto; border-right: none; border-bottom: 1px solid var(--line-strong); }
 	.content { padding: 32px 20px 64px; }
-	#logo { float: right; margin: 0 0 12px 16px; }
 }
 
 /* ── Sidebar ── */
-#logo { display: block; margin: 0 0 16px; }
 .side-title { font-size: 15px; font-weight: 700; letter-spacing: .01em; margin: 0 0 2px; }
 a.side-title { display: block; color: var(--text); text-decoration: none; }
 a.side-title:hover, a.side-title:focus { color: var(--accent); }
@@ -207,6 +205,13 @@ a.side-title:hover, a.side-title:focus { color: var(--accent); }
    title, not as a section heading. No colour override there, so none here either. The
    sheet's `width: auto` and `text-align: left` are no-ops in this layout - they exist to
    undo the base sheet's justified, inset `p` rules, which this page does not have. */
+/* Lab logo, floated into the top-right corner of the content column exactly as in the
+   base sheet. The title and venue wrap beside it; the details list and teaser clear it. */
+#logo {
+	float: right;
+	margin-left: 2em;
+}
+
 .venue {
 	margin: 0.83em 0;
 	font-size: 125%;
