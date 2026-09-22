@@ -17,10 +17,7 @@
 	color-scheme: light dark;
 
 	/* Shared with the lab base sheet (website_templates/shared/style.css): same names, same
-	   values, so the two :root blocks can be diffed line for line. --body-font is a superset
-	   - it also names the system 'Avenir Next' that ships with macOS and iOS, so Apple
-	   readers get the right face if the webfont is unavailable. Adding those two names to
-	   the base sheet would make this line identical too. */
+	   values, so the two :root blocks can be diffed line for line. */
 	--text:          #000;
 	--link:          #1772d0;
 	--accent:        #b35500;
@@ -28,7 +25,7 @@
 	--border-strong: #c0c0c0;
 	--border-soft:   #ddd;
 	--award-bg:      #fff3e0;
-	--body-font:     'Avenir Next Pro', 'Avenir Next', Avenir, 'Lato', Verdana, Helvetica, sans-serif;
+	--body-font:     'Avenir Next Pro', 'Lato', Verdana, Helvetica, sans-serif;
 
 	/* Specific to this guide. The base sheet has no equivalents: it is light-only, so it
 	   needs no explicit page background, and it has no long-form components that call for a
