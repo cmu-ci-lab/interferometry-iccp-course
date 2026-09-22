@@ -1,226 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ICCP 2026 Summer School — Interferometric Imaging</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Build a Michelson-style interferometer on a breadboard, align it to see white-light interference fringes, and use it as a time-domain OCT scanner to recover a depth map of a coin.">
+  <!--Social preview metadata. og:image must be an absolute URL to a raster image; 1200x630 is the
+      standard size for the summary_large_image card below. This currently points at the coin depth
+      map, whose 820x709 shape will be cropped to roughly its middle by most cards - replace it with
+      a dedicated 1200x630 preview and update og:image:width/height to match.-->
+  <meta property="og:title" content="Interferometric Imaging — ICCP Summer School">
+  <meta property="og:description" content="Build a Michelson-style interferometer on a breadboard, align it to see white-light interference fringes, and use it as a time-domain OCT scanner to recover a depth map of a coin.">
+  <meta property="og:image" content="https://cmu-ci-lab.github.io/summer-school/instructions_media/depth_correct.jpg">
+  <meta property="og:image:width" content="820">
+  <meta property="og:image:height" content="709">
+  <meta property="og:url" content="https://cmu-ci-lab.github.io/summer-school/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <!--instructions.html redirects here, so the preferred URL is declared explicitly.-->
+  <link rel="canonical" href="https://cmu-ci-lab.github.io/summer-school/">
+  <link rel="icon" href="shared/favicon.png" type="image/png">
+  <link rel="icon" href="shared/imaging.svg" type="image/svg+xml">
+  <!--Preload only the faces used above the fold. Font Awesome sets font-display: block, so without
+      the preload the icons below render as blank space until the font arrives.-->
+  <link rel="preload" href="shared/fonts/Lato/lato-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="shared/fonts/Lato/lato-bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="shared/fontawesome/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+  <!--Font Awesome Free: the icon-name map, then the solid style. Add brands.min.css and its preload
+      if you ever use a fa-brands icon here.-->
+  <link rel="stylesheet" href="shared/fontawesome/css/fontawesome.min.css">
+  <link rel="stylesheet" href="shared/fontawesome/css/solid.min.css">
+  <link rel="stylesheet" href="index_files/style.css">
+  <title>Interferometric Imaging — ICCP Summer School</title>
 </head>
+
 <body>
-<style>
-  :root {
-    --bg:        #f7f6f1;
-    --sidebar:   #efeee7;
-    --surface:   #efeee7;
-    --surface-2: #e7e6dd;
-    --line:      #d8d6c9;
-    --text:      #22221e;
-    --text-2:    #5c5b51;
-    --muted:     #8b8a7d;
-    --blue:      #2368bd;
-    --violet:    #6a5fd0;
-    --green:     #147a58;
-    --amber:     #9a6a12;
-    --amber-bg:  #f5edd8;
-    --code-bg:   #22221e;
-    --code-text: #e8e7dd;
-    --code-dim:  #9a998c;
-    --kbd-bg:    #ffffff;
-    --kbd-line:  #c9c7ba;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg:        #1a1a19;
-      --sidebar:   #161615;
-      --surface:   #222221;
-      --surface-2: #2a2a28;
-      --line:      #33332f;
-      --text:      #f2f1ea;
-      --text-2:    #c3c2b7;
-      --muted:     #807f75;
-      --blue:      #3987e5;
-      --violet:    #9085e9;
-      --green:     #1fae7d;
-      --amber:     #d9a53f;
-      --amber-bg:  #2b2618;
-      --code-bg:   #131312;
-      --code-text: #e8e7dd;
-      --code-dim:  #807f75;
-      --kbd-bg:    #2a2a28;
-      --kbd-line:  #44443e;
-    }
-  }
-
-  html { background: var(--bg); scroll-padding-top: 24px; }
-  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: "Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system, sans-serif;
-    line-height: 1.65;
-    font-size: 16px;
-    margin: 0;
-  }
-
-  /* ── Layout ── */
-  .layout { display: flex; min-height: 100vh; }
-  .sidebar {
-    width: 280px; flex: 0 0 280px;
-    background: var(--sidebar);
-    border-right: 1px solid var(--line);
-    padding: 32px 20px 32px 28px;
-    box-sizing: border-box;
-    position: sticky; top: 0; height: 100vh; overflow-y: auto;
-  }
-  .content { flex: 1; min-width: 0; padding: 40px 48px 96px; box-sizing: border-box; }
-  .content-inner { max-width: 76ch; }
-  @media (max-width: 860px) {
-    .layout { display: block; }
-    .sidebar { position: static; width: auto; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
-    .content { padding: 32px 20px 64px; }
-  }
-
-  /* ── Sidebar ── */
-  .side-title { font-size: 15px; font-weight: 700; letter-spacing: .01em; margin: 0 0 2px; }
-  a.side-title { display: block; color: var(--text); text-decoration: none; }
-  a.side-title:hover { color: var(--blue); }
-  .sidebar nav a.side-sub-link { padding-left: 2.2em; font-size: 12.5px; color: var(--muted); }
-  .sidebar nav a.side-sub-link:hover { color: var(--text); }
-  .side-sub { font-size: 12.5px; color: var(--muted); margin: 0 0 20px; }
-  .side-part { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 20px 0 6px; }
-  .sidebar nav a {
-    display: block; color: var(--text-2); text-decoration: none;
-    font-size: 13.5px; padding: 3px 8px; border-radius: 6px;
-  }
-  .sidebar nav a:hover { background: var(--surface-2); color: var(--text); }
-  .side-num { display: inline-block; width: 1.4em; color: var(--muted); font-variant-numeric: tabular-nums; }
-
-  /* ── Header ── */
-  .doc-kicker {
-    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
-    color: var(--violet); margin: 0 0 8px;
-  }
-  h1 { font-size: 34px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -.015em; }
-  .doc-sub { font-size: 17px; color: var(--text-2); margin: 0 0 28px; }
-
-  /* ── Part banners & sections ── */
-  .part {
-    display: flex; align-items: baseline; gap: 12px;
-    margin: 56px 0 8px; padding-top: 24px; border-top: 2px solid var(--line);
-  }
-  .part-tag {
-    font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--bg); background: var(--violet); padding: 3px 10px; border-radius: 999px;
-    white-space: nowrap;
-  }
-  .part h2 { font-size: 26px; margin: 0; letter-spacing: -.01em; }
-  .part-note { color: var(--text-2); font-size: 14.5px; margin: 4px 0 24px; }
-
-  .step { margin: 36px 0; }
-  .step h3 {
-    font-size: 19px; margin: 0 0 10px; display: flex; align-items: center; gap: 10px;
-  }
-  .step-num {
-    flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%;
-    background: var(--surface-2); border: 1px solid var(--line); color: var(--text-2);
-    font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
-    font-variant-numeric: tabular-nums;
-  }
-  .step h4 {
-    font-size: 16.5px; margin: 26px 0 8px; padding-bottom: 4px;
-    border-bottom: 1px solid var(--line);
-  }
-  .step ol.sub { margin: 8px 0 8px; padding-left: 22px; list-style: lower-alpha; }
-  .step ol.sub > li { margin: 8px 0; color: var(--text); }
-  .step ol.roman { list-style: lower-roman; padding-left: 22px; }
-  .step p { margin: 8px 0; }
-
-  /* ── Figures ── */
-  figure { margin: 14px 0; }
-  figure video {
-    border-radius: 10px; border: 1px solid var(--line);
-    display: block; max-width: 100%; height: auto; background: #000;
-  }
-  .vid-badge {
-    display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
-    text-transform: uppercase; color: var(--green);
-    border: 1px solid color-mix(in srgb, var(--green) 45%, transparent);
-    border-radius: 999px; padding: 0 8px; margin-right: 6px; vertical-align: 1px;
-  }
-  .vidgrid { display: flex; flex-wrap: wrap; gap: 14px; margin: 12px 0; }
-  .vidgrid figure { flex: 0 1 260px; min-width: 0; margin: 0; }
-  .figgrid { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
-  .figgrid img, figure > img {
-    border-radius: 10px; border: 1px solid var(--line);
-    display: block; max-width: 100%; height: auto;
-  }
-  .figgrid img { flex: 1 1 220px; min-width: 0; max-width: 360px; object-fit: cover; }
-  .figgrid.wide img { max-width: 480px; }
-  figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
-
-  /* ── Callouts ── */
-  .note, .warn {
-    border-radius: 10px; padding: 12px 16px; margin: 14px 0; font-size: 14.5px;
-    border: 1px solid var(--line); background: var(--surface);
-  }
-  .note strong:first-child { color: var(--blue); }
-  .warn { background: var(--amber-bg); border-color: color-mix(in srgb, var(--amber) 35%, transparent); }
-  .warn strong:first-child { color: var(--amber); }
-  .tip strong:first-child { color: var(--green); }
-
-  /* ── Theory panel & math ── */
-  .theory {
-    border: 1px solid var(--line); border-left: 3px solid var(--violet);
-    background: var(--surface); border-radius: 10px;
-    padding: 14px 18px; margin: 18px 0; font-size: 15px;
-  }
-  .theory-title {
-    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em;
-    color: var(--violet); margin: 0 0 8px;
-  }
-  .theory p { margin: 8px 0; }
-  .math {
-    font-family: "STIX Two Math", "Cambria Math", Georgia, "Times New Roman", serif;
-    font-size: 19px; text-align: center; margin: 14px 0;
-  }
-  .math var, .theory var { font-style: italic; font-family: Georgia, "Times New Roman", serif; }
-  .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 3px; }
-  .frac .num { display: block; padding: 0 6px 1px; border-bottom: 1px solid currentColor; }
-  .frac .den { display: block; padding: 1px 6px 0; }
-  .ph { color: var(--amber); font-size: 13px; font-weight: 600; }
-
-  /* ── Code / kbd ── */
-  pre {
-    background: var(--code-bg); color: var(--code-text);
-    border-radius: 10px; padding: 14px 18px; overflow-x: auto;
-    font-size: 13.5px; line-height: 1.6; margin: 12px 0;
-  }
-  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
-  :not(pre) > code {
-    background: var(--surface-2); border: 1px solid var(--line);
-    padding: 1px 6px; border-radius: 6px; font-size: 87%;
-  }
-  pre .cm { color: var(--green); }
-  pre .dim { color: var(--code-dim); }
-  pre .ok { color: #2fbd85; font-weight: 600; }
-  kbd {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px;
-    background: var(--kbd-bg); border: 1px solid var(--kbd-line);
-    border-bottom-width: 2px; border-radius: 6px; padding: 1px 7px;
-  }
-
-  /* ── Misc ── */
-  a { color: var(--blue); }
-  hr.soft { border: none; border-top: 1px solid var(--line); margin: 48px 0 0; }
-  ul.plain { padding-left: 22px; }
-  ul.plain li { margin: 6px 0; }
-  .footer { color: var(--muted); font-size: 13.5px; margin-top: 28px; }
-</style>
+  <a class="skip-link visually-hidden" href="#main">Skip to main content</a>
 
 <div class="layout">
   <aside class="sidebar">
+    <a href="https://imaging.cs.cmu.edu/"><img id="logo" width="64" height="64" src="shared/imaging.svg" alt="Carnegie Mellon computational imaging"></a>
     <a class="side-title" href="#top">Interferometric Imaging</a>
-    <p class="side-sub">ICCP 2026 Summer School</p>
-    <nav>
+    <p class="side-sub">ICCP Summer School</p>
+    <nav aria-label="Guide contents">
       <p class="side-part">Part 1 · Construction</p>
       <a href="#c1"><span class="side-num">1</span>The breadboard</a>
       <a href="#c2"><span class="side-num">2</span>Beamsplitter post</a>
@@ -252,30 +74,46 @@
     </nav>
   </aside>
 
-  <main class="content"><div class="content-inner">
+  <main id="main" class="content" tabindex="-1"><div class="content-inner">
 
-    <p class="doc-kicker" id="top">ICCP 2026 Summer School</p>
-    <h1>Interferometric Imaging</h1>
-    <p class="doc-sub">Build a Michelson-style interferometer on a breadboard, align it to see white-light
-    interference fringes, and use it as a time-domain OCT scanner to recover a depth map of a coin.</p>
+    <header>
+      <p class="venue">ICCP Summer School</p>
+      <h1 id="top">Interferometric Imaging</h1>
+      <p class="doc-sub">Build a Michelson-style interferometer on a breadboard, align it to see white-light
+      interference fringes, and use it as a time-domain OCT scanner to recover a depth map of a coin.</p>
+      <ul class="details">
+        <!--Dates, location and instructors for the current offering go here. Left commented out rather
+            than filled with stand-in text so the live page never shows a placeholder.-->
+        <!--<li><i class="fa-solid fa-calendar-days fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Dates: Summer school dates</li>-->
+        <!--<li><i class="fa-solid fa-location-dot fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Location: Lab location</li>-->
+        <!--<li><i class="fa-solid fa-person-chalkboard fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Instructors: <a href="https://instructor.website/">Instructor name</a></li>-->
+        <li><i class="fa-solid fa-code-branch fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Code: <a href="https://github.com/cmu-ci-lab/summer-school">cmu-ci-lab/summer-school</a></li>
+        <li><i class="fa-solid fa-file-pdf fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Presentation: <a href="index_files/presentation.pdf">slides (PDF)</a></li>
+        <li><nav aria-label="Quick links"><i class="fa-solid fa-bars fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Quick links: <a href="#part1">construction</a>, <a href="#part2">alignment</a>, <a href="#part3">OCT</a>, <a href="#software">software</a>, <a href="#troubleshooting">troubleshooting</a></nav></li>
+      </ul>
+
+      <figure id="teaser">
+        <img src="instructions_media/setup_labelled.jpg" alt="Top-down labelled photo of the interferometer: LED and telescoping tube, camera and lens, beamsplitter on rotation stage, object mirror on XY stage, reference mirror on motorized stage, LED driver, KDC101 controller" width="1600" height="1336" fetchpriority="high">
+        <figcaption>The setup you will build — a Michelson interferometer on a breadboard. Light from the
+        LED is split at the beamsplitter into two arms, the reference mirror on the motorized stage and the
+        object (a mirror at first, later your coin) on the XY stage, and recombines into the camera. Every
+        part you will mount and align is labelled.</figcaption>
+      </figure>
+    </header>
+
     <p><strong>Where this is going:</strong> by the end of this guide you will have built a scanner that
     can map a surface down to <strong>micron scale</strong> — the depth map below, and the transient video of
     the coherence gate sweeping across a coin, are both produced by the instrument you're about to build.</p>
-    <p><strong>The setup you will build</strong> — a Michelson interferometer on a breadboard. Light from the
-    LED is split at the beamsplitter into two arms — the reference mirror on the motorized stage, and the
-    object (a mirror at first, later your coin) on the XY stage — and recombines into the camera:</p>
-    <figure><img src="instructions_media/setup_labelled.jpg" alt="Top-down labelled photo of the interferometer: LED and telescoping tube, camera and lens, beamsplitter on rotation stage, object mirror on XY stage, reference mirror on motorized stage, LED driver, KDC101 controller" width="760">
-    <figcaption>The assembled instrument, with every part you will mount and align labelled.</figcaption></figure>
     <p><strong>The results</strong> — what this instrument measures:</p>
-    <div style="display:flex;flex-wrap:nowrap;gap:14px;align-items:flex-start;margin:12px 0">
-      <figure style="flex:1.157 1 0;min-width:0;margin:0"><img src="instructions_media/depth_correct.jpg" style="width:100%;height:auto" alt="Teaser: micron-scale OCT depth map of a coin">
+    <div class="figrow">
+      <figure class="depth"><img src="instructions_media/depth_correct.jpg" width="820" height="709" alt="Micron-scale OCT depth map of a coin" loading="lazy">
       <figcaption>A micron-scale depth map of a coin, recovered by your scanner.</figcaption></figure>
-      <figure style="flex:1.789 1 0;min-width:0;margin:0"><video src="instructions_media/oct_contrast_video.mp4" style="width:100%;height:auto" controls muted loop playsinline preload="metadata"></video>
-      <figcaption><span class="vid-badge">video</span>Visualizing the temporal coherence allows for
+      <figure class="transient"><video src="instructions_media/oct_contrast_video.mp4" controls muted loop playsinline width="1428" height="798" poster="instructions_media/posters/oct_contrast_video.jpg" preload="none"></video>
+      <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Visualizing the temporal coherence allows for
       pseudo-transient imaging — raw frames left, interference contrast right.</figcaption></figure>
     </div>
-    <div class="note"><strong>Tip:</strong> steps throughout this guide include short
-    <span class="vid-badge">video</span> clips — watch them as you go; they show you what you should expect
+    <div class="note tip"><i class="fa-solid fa-lightbulb fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Tip:</strong> steps throughout this guide include short
+    <span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span> clips — watch them as you go; they show you what you should expect
     to see at each stage, both on the breadboard and on screen.</div>
 
     <!-- ════════════════ PART 1 ════════════════ -->
@@ -288,7 +126,7 @@
       <h3><span class="step-num">1</span>Start with the breadboard</h3>
       <p>Your breadboard should look something like this — the LED driver (red box) and the LED mount
       are already in place:</p>
-      <figure><img src="instructions_media/p01_y0205_0.jpg" alt="Bare breadboard with LED driver and LED mount" width="560"></figure>
+      <figure><img src="instructions_media/p01_y0205_0.jpg" alt="Bare breadboard with LED driver and LED mount" width="560" loading="lazy"></figure>
     </section>
 
     <section class="step" id="c2">
@@ -296,8 +134,8 @@
       <p>Mount the main post with the beamsplitter (BS) using the cap screws at the designated location
       on the breadboard. Depending on your specific setup, the position of the beamsplitter may not match the one shown below. Ask one of us to verify if the positioning is correct.</p>
       <div class="figgrid wide">
-        <img src="instructions_media/p02_y0073_0.jpg" alt="Beamsplitter post placed on breadboard">
-        <img src="instructions_media/p02_y0252_1.jpg" alt="Beamsplitter post secured with cap screws">
+        <img src="instructions_media/p02_y0073_0.jpg" alt="Beamsplitter post placed on breadboard" width="900" height="677" loading="lazy">
+        <img src="instructions_media/p02_y0252_1.jpg" alt="Beamsplitter post secured with cap screws" width="900" height="677" loading="lazy">
       </div>
     </section>
 
@@ -306,19 +144,19 @@
       <ol class="sub">
         <li>Screw on the 100&nbsp;mm Thorlabs lens (AC254-100-A-ML).
           <div class="figgrid">
-            <img src="instructions_media/p02_y0476_2.jpg" alt="Thorlabs AC254-100-A-ML lens in its box">
-            <img src="instructions_media/p02_y0478_3.jpg" alt="Screwing the lens onto the cage cube">
+            <img src="instructions_media/p02_y0476_2.jpg" alt="Thorlabs AC254-100-A-ML lens in its box" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p02_y0478_3.jpg" alt="Screwing the lens onto the cage cube" width="900" height="1195" loading="lazy">
           </div>
         </li>
         <li>Screw on the LED with the telescoping tube onto the threading of the lens.
-          <figure><img src="instructions_media/p03_y0073_0.jpg" alt="LED with telescoping tube being attached" width="420"></figure>
+          <figure><img src="instructions_media/p03_y0073_0.jpg" alt="LED with telescoping tube being attached" width="420" loading="lazy"></figure>
         </li>
         <li>Connect the LED to the LED driver, and try powering it up with the power adapter.
-          <div class="warn"><strong>Careful:</strong> the LED can be very bright — try not to look directly
+          <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Careful:</strong> the LED can be very bright — try not to look directly
           into it. Turn the driver's power knob down before switching it on.</div>
           <div class="figgrid">
-            <img src="instructions_media/p03_y0391_1.jpg" alt="Connecting the LED cable to the driver">
-            <img src="instructions_media/p03_y0389_2.jpg" alt="Powering up the LED driver">
+            <img src="instructions_media/p03_y0391_1.jpg" alt="Connecting the LED cable to the driver" width="900" height="677" loading="lazy">
+            <img src="instructions_media/p03_y0389_2.jpg" alt="Powering up the LED driver" width="900" height="1195" loading="lazy">
           </div>
         </li>
       </ol>
@@ -328,20 +166,20 @@
       <h3><span class="step-num">4</span>Camera arm</h3>
       <ol class="sub">
         <li>Screw the 105&nbsp;mm (or 200&nbsp;mm) Nikon lens on the threading at the right end of the BS cube.
-          <figure><img src="instructions_media/p04_y0102_0.jpg" alt="Nikon lens attached to the right of the BS cube" width="420"></figure>
+          <figure><img src="instructions_media/p04_y0102_0.jpg" alt="Nikon lens attached to the right of the BS cube" width="420" loading="lazy"></figure>
         </li>
         <li>You should have a C-mount camera that looks like this:
-          <figure><img src="instructions_media/p04_y0408_1.jpg" alt="Three C-mount cameras" width="420"></figure>
+          <figure><img src="instructions_media/p04_y0408_1.jpg" alt="Three C-mount cameras" width="420" loading="lazy"></figure>
         </li>
         <li>Screw the C-mount camera onto the F-C mount, and <em>then</em> attach it to the back of the lens.
           <div class="figgrid">
-            <img src="instructions_media/p04_y0570_2.jpg" alt="Camera with F-C mount adapter">
-            <img src="instructions_media/p04_y0572_3.jpg" alt="Screwing camera onto adapter">
-            <img src="instructions_media/p04_y0573_4.jpg" alt="Assembled camera and adapter">
-            <img src="instructions_media/p05_y0073_0.jpg" alt="Attaching the camera to the back of the lens">
-            <img src="instructions_media/p05_y0073_1.jpg" alt="Camera mounted on the lens">
+            <img src="instructions_media/p04_y0570_2.jpg" alt="Camera with F-C mount adapter" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p04_y0572_3.jpg" alt="Screwing camera onto adapter" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p04_y0573_4.jpg" alt="Assembled camera and adapter" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p05_y0073_0.jpg" alt="Attaching the camera to the back of the lens" width="900" height="677" loading="lazy">
+            <img src="instructions_media/p05_y0073_1.jpg" alt="Camera mounted on the lens" width="900" height="677" loading="lazy">
           </div>
-          <div class="warn"><strong>Careful:</strong> careful not to leave bare sensor open too long while handling the camera (to prevent dust/damage).</div>
+          <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Careful:</strong> careful not to leave bare sensor open too long while handling the camera (to prevent dust/damage).</div>
         </li>
       </ol>
     </section>
@@ -352,23 +190,23 @@
         <li>Place the XY stage (with the motorized Z825B actuator inserted) on
         the breadboard (at the designated location indicated by screws) and secure it using washers and cap screws.
           <div class="figgrid">
-            <img src="instructions_media/p05_y0214_2.jpg" alt="Reference XY stage placement">
-            <img src="instructions_media/p05_y0216_3.jpg" alt="XY stage with Z825B actuator">
-            <img src="instructions_media/p06_y0074_0.jpg" alt="Stage secured on the breadboard">
+            <img src="instructions_media/p05_y0214_2.jpg" alt="Reference XY stage placement" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p05_y0216_3.jpg" alt="XY stage with Z825B actuator" width="900" height="677" loading="lazy">
+            <img src="instructions_media/p06_y0074_0.jpg" alt="Stage secured on the breadboard" width="900" height="677" loading="lazy">
           </div>
         </li>
         <li><strong>Careful not to touch or damage the mirror</strong> — screw the round mirror mount onto the
         stage using the set screw at the bottom.
           <div class="figgrid">
-            <img src="instructions_media/p06_y0441_3.jpg" alt="Round mirror mount in hand">
-            <img src="instructions_media/p06_y0441_4.jpg" alt="Mirror mount post">
-            <img src="instructions_media/p07_y0090_1.jpg" alt="Mirror mount installed on the stage">
+            <img src="instructions_media/p06_y0441_3.jpg" alt="Round mirror mount in hand" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p06_y0441_4.jpg" alt="Mirror mount post" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p07_y0090_1.jpg" alt="Mirror mount installed on the stage" width="900" height="677" loading="lazy">
           </div>
         </li>
         <li>Connect the end of the Z825B motor to the KDC101 K-cube motor controller (red cube).
           <div class="figgrid">
-            <img src="instructions_media/p07_y0449_3.jpg" alt="Z825B motor cable routed to controller">
-            <img src="instructions_media/p07_y0450_4.jpg" alt="Plugging motor into the KDC101">
+            <img src="instructions_media/p07_y0449_3.jpg" alt="Z825B motor cable routed to controller" width="900" height="677" loading="lazy">
+            <img src="instructions_media/p07_y0450_4.jpg" alt="Plugging motor into the KDC101" width="900" height="1195" loading="lazy">
           </div>
         </li>
       </ol>
@@ -380,25 +218,25 @@
         <li>Similar to the reference arm, place and secure the XY translation stage for the object side
         at the designated location. Your stage may look slightly different from the XY stage in the image.
           <div class="figgrid">
-            <img src="instructions_media/p08_y0073_0.jpg" alt="Object-side XY translation stage">
-            <img src="instructions_media/p08_y0073_1.jpg" alt="Placing the object stage on the breadboard">
-            <img src="instructions_media/p08_y0236_2.jpg" alt="Object stage secured">
+            <img src="instructions_media/p08_y0073_0.jpg" alt="Object-side XY translation stage" width="900" height="677" loading="lazy">
+            <img src="instructions_media/p08_y0073_1.jpg" alt="Placing the object stage on the breadboard" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p08_y0236_2.jpg" alt="Object stage secured" width="900" height="1195" loading="lazy">
           </div>
         </li>
         <li>Drop in the post holding the rectangular mirror, <strong>careful not to touch or damage the
         mirror</strong>.
           <div class="figgrid">
-            <img src="instructions_media/p09_y0073_0.jpg" alt="Rectangular mirror post in hand">
-            <img src="instructions_media/p09_y0073_1.jpg" alt="Dropping the mirror post into the stage">
+            <img src="instructions_media/p09_y0073_0.jpg" alt="Rectangular mirror post in hand" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p09_y0073_1.jpg" alt="Dropping the mirror post into the stage" width="900" height="1195" loading="lazy">
           </div>
         </li>
         <li>Use the <em>lateral</em> micro-adjusters to position the mirrors to be facing directly opposite
         the cage-cube opening.
           <div class="figgrid">
-            <img src="instructions_media/p09_y0378_3.jpg" alt="Adjusting the mirror position">
-            <img src="instructions_media/p09_y0376_4.jpg" alt="Mirror facing the cage cube">
-            <img src="instructions_media/p10_y0073_0.jpg" alt="Both arms with mirrors positioned">
-            <img src="instructions_media/p10_y0073_1.jpg" alt="Top view of the completed arms">
+            <img src="instructions_media/p09_y0378_3.jpg" alt="Adjusting the mirror position" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p09_y0376_4.jpg" alt="Mirror facing the cage cube" width="900" height="677" loading="lazy">
+            <img src="instructions_media/p10_y0073_0.jpg" alt="Both arms with mirrors positioned" width="900" height="1195" loading="lazy">
+            <img src="instructions_media/p10_y0073_1.jpg" alt="Top view of the completed arms" width="900" height="1195" loading="lazy">
           </div>
         </li>
       </ol>
@@ -409,9 +247,9 @@
       <p>Fix the orientation of the base rotation stage at the centre (ask for a <strong>5/64 hex key</strong>)
       such that the LED and camera are roughly along the breadboard holes.</p>
       <div class="figgrid">
-        <img src="instructions_media/p10_y0352_2.jpg" alt="Tightening the base rotation stage">
-        <img src="instructions_media/p10_y0353_3.jpg" alt="LED and camera aligned along breadboard holes">
-        <img src="instructions_media/p10_y0501_4.jpg" alt="Hex key adjustment of the rotation stage">
+        <img src="instructions_media/p10_y0352_2.jpg" alt="Tightening the base rotation stage" width="900" height="1195" loading="lazy">
+        <img src="instructions_media/p10_y0353_3.jpg" alt="LED and camera aligned along breadboard holes" width="900" height="677" loading="lazy">
+        <img src="instructions_media/p10_y0501_4.jpg" alt="Hex key adjustment of the rotation stage" width="900" height="677" loading="lazy">
       </div>
     </section>
 
@@ -429,7 +267,7 @@
       <p>Before touching any optics, make sure the laptop can actually talk to the stage and the camera.
       Plug in the KDC101's USB cable, switch it on with the red switch, connect the camera's USB cable,
       then run:</p>
-      <div class="note"><strong>Windows:</strong> install the
+      <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Windows:</strong> install the
       <a href="https://www.thorlabs.com/software-pages/motion_control">Thorlabs Kinesis software</a> first —
       it provides the APT/FTDI driver the stage is detected through; without it the stage test will fail even
       though everything else is set up correctly. (See the Software installations section below.)</div>
@@ -466,7 +304,7 @@ cd summer-school</code></pre>
 <span class="cm"># Windows: .venv\Scripts\activate</span></code></pre>
         </div>
       </div>
-      <div class="note"><strong>Wrong <code>python</code>?</strong> If a script fails with
+      <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Wrong <code>python</code>?</strong> If a script fails with
       <code>ModuleNotFoundError</code> (pylablib, cv2, ...), you are probably running the wrong Python.
       The repo ships a <code>./python</code> wrapper (already executable) that always resolves the project
       environment — just prefix any command with <code>./</code>, e.g. <code>./python visualizer.py</code>.
@@ -479,7 +317,7 @@ cd summer-school</code></pre>
       <code>pyueye</code> for IDS uEye — note that <strong>IDS cameras work on Windows only</strong> (the
       IDS Software Suite has no macOS support), so pair IDS rigs with a Windows laptop. See
       <a href="#software">Software installations</a> below for step-by-step instructions.</p>
-      <div class="warn"><strong>Caution (macOS):</strong> the Vimba&nbsp;X installer package may be blocked
+      <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Caution (macOS):</strong> the Vimba&nbsp;X installer package may be blocked
       by macOS when you run it. If that happens, open <em>System Settings → Privacy&nbsp;&amp;&nbsp;Security</em>,
       scroll down to the message about the blocked installer, and click <em>Open&nbsp;Anyway</em> to allow it
       to run.</div>
@@ -488,7 +326,7 @@ cd summer-school</code></pre>
 <pre><code>python test_hardware.py</code></pre>
       <p>Or, to skip a vendor you don't have: <code>python test_hardware.py --camera ids</code> (IDS only —
       skips the Vimba&nbsp;X check) or <code>--camera avt</code> (Allied Vision only).</p>
-      <div class="warn"><strong>Caution:</strong> if you're using an Allied Vision camera, you will need to
+      <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Caution:</strong> if you're using an Allied Vision camera, you will need to
       <code>pip</code> install the <code>vmbpy</code> package. <code>test_hardware.py</code> will
       automatically prompt you with instructions to do so.</div>
       <p>The stage test connects, reads the position, <strong>moves +5&nbsp;mm and back</strong>, and verifies
@@ -526,7 +364,7 @@ cd summer-school</code></pre>
         <li><strong>The saved stack size</strong> should be plausible (a few frames × resolution ×
         1–2&nbsp;bytes).</li>
       </ul>
-      <div class="note"><strong>Stage not found?</strong> Check the USB cable and that the KDC101 is powered
+      <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Stage not found?</strong> Check the USB cable and that the KDC101 is powered
       on. On macOS remember: no serial port is <em>expected</em> (the KDC101 is driven directly over libusb,
       so <code>libusb</code> must be installed). If a script crashed earlier, the hardware may still be held
       by its Python kernel — restart the kernel and retry. A camera failure is usually a missing vendor SDK;
@@ -538,30 +376,30 @@ cd summer-school</code></pre>
       <h3><span class="step-num">2</span>Getting light into the camera</h3>
       <ol class="sub">
         <li>Ensure the lens aperture is fully open.
-          <figure><img src="instructions_media/p11_y0117_0.jpg" alt="Nikon lens aperture ring set fully open" width="380"></figure>
+          <figure><img src="instructions_media/p11_y0117_0.jpg" alt="Nikon lens aperture ring set fully open" width="380" loading="lazy"></figure>
         </li>
         <li>Launch the visualizer — everything in the rest of this part happens inside it. It auto-detects
         the camera (AVT or IDS), connects to the stage, and homes it on startup:
 <pre><code><span class="cm"># live camera preview + coherence panel</span>
 <span class="cm"># --step: coarse stage step in mm; --window-mm: positional window for the DC mean</span>
 python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
-          <div class="note"><strong>Stage control:</strong> the reference stage is driven from the keyboard —
+          <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Stage control:</strong> the reference stage is driven from the keyboard —
           <kbd>w</kbd>/<kbd>s</kbd> jog by the coarse step, <kbd>e</kbd>/<kbd>d</kbd> by the
           fine step (coarse ÷ 10), and <kbd>[</kbd>/<kbd>]</kbd> change the step size. To sweep, just
           <strong>hold <kbd>w</kbd> or <kbd>e</kbd></strong> — the stage moves continuously; there is no need
           for slow individual presses. The status bar along
           the bottom shows exposure, frame rate, the current stage position, and the step sizes.</div>
-          <div class="warn"><strong>Don't sweep backwards:</strong> the backward keys <kbd>s</kbd>/<kbd>d</kbd>
+          <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Don't sweep backwards:</strong> the backward keys <kbd>s</kbd>/<kbd>d</kbd>
           produce a mechanical <em>kick-back</em> when the stage reverses direction (backlash). Use them only
           to reposition; always take your measurement sweeps forward with <kbd>w</kbd>/<kbd>e</kbd>.</div>
-          <div class="note"><strong>Ignore the coherence panel for now</strong> — the plot and stat tiles on
+          <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Ignore the coherence panel for now</strong> — the plot and stat tiles on
           the right of the window aren't needed until Section&nbsp;3 (OCT). In this section you only use the
           live image and the stage keys.</div>
         </li>
         <li>Adjust your camera to be roughly upright by rotating it about the rotation mount with graduations.
           <figure>
-            <video src="instructions_media/hw_rotate_camera.mp4" controls muted loop playsinline preload="metadata" width="300"></video>
-            <figcaption><span class="vid-badge">video</span>Rotating the camera about the graduated rotation
+            <video src="instructions_media/hw_rotate_camera.mp4" controls muted loop playsinline width="300" height="533" poster="instructions_media/posters/hw_rotate_camera.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Rotating the camera about the graduated rotation
             mount until the image is upright.</figcaption>
           </figure>
         </li>
@@ -573,16 +411,16 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
             <li>using the mirror adjuster knobs.</li>
           </ol>
           <figure>
-            <video src="instructions_media/hw_knobs.mp4" controls muted loop playsinline preload="metadata" width="300"></video>
-            <figcaption><span class="vid-badge">video</span>The mirror adjuster knobs on the kinematic mount —
+            <video src="instructions_media/hw_knobs.mp4" controls muted loop playsinline width="300" height="533" poster="instructions_media/posters/hw_knobs.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>The mirror adjuster knobs on the kinematic mount —
             these tilt the mirror to steer its image of the LED.</figcaption>
           </figure>
           <p>You should see two ‘blobs’ — (likely blurred) images of the LED — that move as you adjust
           the mirrors.</p>
-          <figure><img src="instructions_media/viz_two_blobs.jpg" alt="Visualizer showing the two blurred blobs of LED light" width="640">
+          <figure><img src="instructions_media/viz_two_blobs.jpg" alt="Visualizer showing the two blurred blobs of LED light" width="640" loading="lazy">
           <figcaption>The visualizer with the two (blurred) images of the LED in the live view — coherence
           panel still empty on the right.</figcaption></figure>
-          <div class="note"><strong>Note:</strong> You may need to lower the LED power and reduce your exposure.
+          <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Note:</strong> You may need to lower the LED power and reduce your exposure.
           Adjust exposure live with the <kbd>+</kbd>/<kbd>-</kbd> keys in the visualizer, or relaunch with
           <code>--exposure &lt;µs&gt;</code>.</div>
         </li>
@@ -597,7 +435,7 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
       fluent with the controls makes the alignment steps much faster.</p>
 
       <h4>Visualizer</h4>
-      <figure><img src="instructions_media/viz_anatomy.jpg" alt="The visualizer with numbered red boxes: 1 live camera view, 2 stat tiles, 3 coherence plot, 4 status bar, 5 selected patch and its magnified inset" width="640">
+      <figure><img src="instructions_media/viz_anatomy.jpg" alt="The visualizer with numbered red boxes: 1 live camera view, 2 stat tiles, 3 coherence plot, 4 status bar, 5 selected patch and its magnified inset" width="640" loading="lazy">
       <figcaption>The parts of the visualizer, numbered to match the list below.</figcaption></figure>
       <ul class="plain">
         <li><strong>① Live camera view.</strong> The raw camera feed. Click twice on it to select a
@@ -640,7 +478,7 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
         <li><kbd>r</kbd> — reset the plot but keep the patch</li>
         <li><kbd>q</kbd> — quit</li>
       </ul>
-      <div class="warn"><strong>Disclaimer:</strong> the visualizer is subject to change — the exact layout,
+      <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Disclaimer:</strong> the visualizer is subject to change — the exact layout,
       labels, and controls may differ a little from the screenshots and videos in this guide. That's ok: the
       pieces above (live view, stat tiles, plot, status bar) stay the same.</div>
     </section>
@@ -650,36 +488,36 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
       <ol class="sub">
         <li>Set the lens to infinity focusing.
           <figure>
-            <video src="instructions_media/hw_mirror_infinity.mp4" controls muted loop playsinline preload="metadata" width="300"></video>
-            <figcaption><span class="vid-badge">video</span>Turn the focus ring until the <strong>∞</strong>
+            <video src="instructions_media/hw_mirror_infinity.mp4" controls muted loop playsinline width="300" height="533" poster="instructions_media/posters/hw_mirror_infinity.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Turn the focus ring until the <strong>∞</strong>
             symbol sits over the index mark in the distance window (highlighted by the green box).</figcaption>
           </figure>
         </li>
         <li>Adjust the telescoping tube until the images of the active element of the LED (this may look
         different for each LED) look as sharp as possible.
-          <div class="note"><strong>Note:</strong> if you have the SM1NR1 telescoping tube, the LED should
+          <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Note:</strong> if you have the SM1NR1 telescoping tube, the LED should
           <em>not</em> rotate as you adjust it — only the tube extends. Some of the lens tubes (SM1U) do
           rotate as you turn them, so don't be alarmed if the LED spins with the adjustment on those.</div>
           <div class="vidgrid">
             <figure>
-              <video src="instructions_media/hw_rotate_sm1nr1.mp4" controls muted loop playsinline preload="metadata"></video>
-              <figcaption><span class="vid-badge">video</span><strong>SM1NR1</strong> — the tube extends
+              <video src="instructions_media/hw_rotate_sm1nr1.mp4" controls muted loop playsinline width="540" height="960" poster="instructions_media/posters/hw_rotate_sm1nr1.jpg" preload="none"></video>
+              <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span><strong>SM1NR1</strong> — the tube extends
               without rotating the LED.</figcaption>
             </figure>
             <figure>
-              <video src="instructions_media/hw_rotate_sm1u.mp4" controls muted loop playsinline preload="metadata"></video>
-              <figcaption><span class="vid-badge">video</span><strong>SM1U</strong> — the LED rotates with
+              <video src="instructions_media/hw_rotate_sm1u.mp4" controls muted loop playsinline width="540" height="960" poster="instructions_media/posters/hw_rotate_sm1u.jpg" preload="none"></video>
+              <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span><strong>SM1U</strong> — the LED rotates with
               the adjustment.</figcaption>
             </figure>
           </div>
           <figure>
-            <video src="instructions_media/viz_focusing_unaligned.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-            <figcaption><span class="vid-badge">video</span>Collimating: the two images of the LED's active
+            <video src="instructions_media/viz_focusing_unaligned.mp4" controls muted loop playsinline width="560" height="373" poster="instructions_media/posters/viz_focusing_unaligned.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Collimating: the two images of the LED's active
             element sharpen up as the telescoping tube is adjusted.</figcaption>
           </figure>
-          <div class="note"><strong>Note:</strong> LEDs come in different shapes, so don't expect yours to
+          <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Note:</strong> LEDs come in different shapes, so don't expect yours to
           look like the one in the video — it just has to come into focus.</div>
-          <div class="note tip"><strong>Tip:</strong> You may choose to block one of the arms using a piece of
+          <div class="note tip"><i class="fa-solid fa-lightbulb fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Tip:</strong> You may choose to block one of the arms using a piece of
           card to make alignment easier.</div>
         </li>
       </ol>
@@ -690,8 +528,8 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
       <p>Use the adjusters on the mirror mounts to position both images of the LED roughly at the center
       of the field of view of the camera (better aligned, the better). You can use the inset preview by selecting a crop region to help you align them precisely.</p>
       <figure>
-        <video src="instructions_media/viz_aligning.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-        <figcaption><span class="vid-badge">video</span>Walking the two LED images on top of each other with
+        <video src="instructions_media/viz_aligning.mp4" controls muted loop playsinline width="560" height="373" poster="instructions_media/posters/viz_aligning.jpg" preload="none"></video>
+        <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Walking the two LED images on top of each other with
         the mirror adjuster knobs.</figcaption>
       </figure>
     </section>
@@ -711,27 +549,27 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
         <li><strong>Focus the lens onto the object-side mirror.</strong> Block the mirror on the motorized stage using a piece of card. Change the lens focusing such that
         the other mirror (straight opposite the camera) comes into focus (about 1:1).
           <figure>
-            <video src="instructions_media/hw_zoom_lens.mp4" controls muted loop playsinline preload="metadata" width="300"></video>
-            <figcaption><span class="vid-badge">video</span>Changing the lens focusing — turn the focus ring
+            <video src="instructions_media/hw_zoom_lens.mp4" controls muted loop playsinline width="300" height="533" poster="instructions_media/posters/hw_zoom_lens.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Changing the lens focusing — turn the focus ring
             on the Nikon lens.</figcaption>
           </figure>
           <figure>
-            <video src="instructions_media/viz_focus_1to1.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-            <figcaption><span class="vid-badge">video</span>Bringing the mirror surface into focus at about
+            <video src="instructions_media/viz_focus_1to1.mp4" controls muted loop playsinline width="560" height="373" poster="instructions_media/posters/viz_focus_1to1.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Bringing the mirror surface into focus at about
             1:1 — watch the dust and scratches on the glass sharpen up.</figcaption>
           </figure>
           <p>You will need to increase the exposure time and/or LED power.</p>
-          <div class="note tip"><strong>Tip:</strong> Laterally move the mirror using the micro-adjusters
+          <div class="note tip"><i class="fa-solid fa-lightbulb fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Tip:</strong> Laterally move the mirror using the micro-adjusters
           until its edge comes into view, and make sure to focus on the edge — it gives you something sharp
           to judge the focus by. You may also use dust or scratches present on the mirror.</div>
           <figure>
-            <video src="instructions_media/hw_mirror_focusing.mp4" controls muted loop playsinline preload="metadata" width="300"></video>
-            <figcaption><span class="vid-badge">video</span>Laterally translating the mirror with the stage's
+            <video src="instructions_media/hw_mirror_focusing.mp4" controls muted loop playsinline width="300" height="533" poster="instructions_media/posters/hw_mirror_focusing.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Laterally translating the mirror with the stage's
             micro-adjuster to bring its edge into view.</figcaption>
           </figure>
           <figure>
-            <video src="instructions_media/viz_focus_edge.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-            <figcaption><span class="vid-badge">video</span>Focusing on the mirror's edge until it is
+            <video src="instructions_media/viz_focus_edge.mp4" controls muted loop playsinline width="560" height="373" poster="instructions_media/posters/viz_focus_edge.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Focusing on the mirror's edge until it is
             sharp.</figcaption>
           </figure>
         </li>
@@ -743,12 +581,12 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
         Select a <strong>patch</strong> on the live view — two clicks: the first anchors a corner, the second finalizes it. The coherence panel now tracks that
         patch as you move the stage.
           <figure>
-            <video src="instructions_media/viz_select_patch.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-            <figcaption><span class="vid-badge">video</span>Selecting a patch: one click to anchor a corner,
+            <video src="instructions_media/viz_select_patch.mp4" controls muted loop playsinline width="560" height="373" poster="instructions_media/posters/viz_select_patch.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Selecting a patch: one click to anchor a corner,
             a second to finalize.</figcaption>
           </figure>
            <div class="theory">
-            <p class="theory-title">What the panel is computing</p>
+            <p class="theory-title"><i class="fa-solid fa-square-root-variable fa-sm fa-fw" aria-hidden="true"></i>&nbsp;What the panel is computing</p>
             <p>The plotted value is the <code>computeMeanDiff</code> measure: within the patch, take each
             frame's absolute deviation from the local (running) mean intensity, and average it —
             mean&nbsp;|<var>I</var> − DC|. The DC mean is the plain image; what's left is the amplitude of the
@@ -767,11 +605,11 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
         too large and you can step clean over the region where the interference appears. Somewhere along the
         sweep the pathlengths match: you will see the fringes appear in the live view, and a
         <strong>sharp peak</strong> in the panel.
-          <div class="warn"><strong>Caution:</strong> the backwards keys (<kbd>s</kbd>/<kbd>d</kbd>) should
+          <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Caution:</strong> the backwards keys (<kbd>s</kbd>/<kbd>d</kbd>) should
           only be used to move the mirror back into position — do not sweep with them.</div>
           <figure>
-            <video src="instructions_media/viz_coherence_sweep.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-            <figcaption><span class="vid-badge">video</span>Stepping the stage with a patch selected: the plot
+            <video src="instructions_media/viz_coherence_sweep.mp4" controls muted loop playsinline width="560" height="373" poster="instructions_media/posters/viz_coherence_sweep.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Stepping the stage with a patch selected: the plot
             sits at the noise floor until the pathlengths match — then fringes appear and the amplitude spikes
             into a sharp peak.</figcaption>
           </figure>
@@ -786,7 +624,7 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
       <!-- the mouse wheel if it helps), then decrease the step size with <kbd>[</kbd> and step through the peak
       with the fine keys <kbd>e</kbd>/<kbd>d</kbd>. At the top of the peak you should see bright interference
       fringes across the camera view.</p> -->
-      <!-- <div class="note"><strong>Let the visualizer do it:</strong> -->
+      <!-- <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Let the visualizer do it:</strong> -->
         <ol>
          <li>With a patch selected the <kbd>f</kbd> key runs a local scan centered around the current position of the stage— it covers a range of ±0.5&nbsp;mm
       around the current position in 10&nbsp;µm steps, then moves the stage to the peak and saves a
@@ -794,8 +632,8 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
         
     <!-- </div> -->
       <!-- <figure>
-        <video src="instructions_media/viz_zooming_into_coherence.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-        <figcaption><span class="vid-badge">video</span>Zooming into the coherence peak from a wide sweep,
+        <video src="instructions_media/viz_zooming_into_coherence.mp4" controls muted loop playsinline width="560" height="373" poster="instructions_media/posters/viz_zooming_into_coherence.jpg" preload="none"></video>
+        <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Zooming into the coherence peak from a wide sweep,
         jogging to just before it, and stepping through with a finer step.</figcaption>
       </figure> -->
 
@@ -803,8 +641,8 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
       <li> Once you've found a peak you should be able to see fringes already. 
               You can use the mirror-orientation adjusters to change the interference fringe pattern:
       <figure>
-        <video src="instructions_media/viz_fringe_pattern.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-        <figcaption><span class="vid-badge">video</span>The fringe pattern changing as the mirror-orientation
+        <video src="instructions_media/viz_fringe_pattern.mp4" controls muted loop playsinline width="560" height="361" poster="instructions_media/posters/viz_fringe_pattern.jpg" preload="none"></video>
+        <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>The fringe pattern changing as the mirror-orientation
         adjusters are turned — the spacing and curvature of the fringes follow the relative tilt of the two
         mirrors.</figcaption>
       </figure>
@@ -830,12 +668,12 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
       <p>
       This <strong>temporal coherence length</strong> of the
       spectrally filtered light reaching the camera should be our <em>depth resolution</em> for OCT.</p>
-      <figure><img src="instructions_media/viz_zoom_last.jpg" alt="Visualizer after a fine sweep: resolved coherence envelope with FWHM 29.3 um" width="640">
+      <figure><img src="instructions_media/viz_zoom_last.jpg" alt="Visualizer after a fine sweep: resolved coherence envelope with FWHM 29.3 um" width="640" loading="lazy">
       <figcaption>After the fine sweep the envelope is fully resolved and the FWHM tile reads out the
       coherence length — here ≈ 29&nbsp;µm at a peak of 21.17&nbsp;mm.</figcaption></figure>
 
       <div class="theory">
-        <p class="theory-title">What should we expect?</p>
+        <p class="theory-title"><i class="fa-solid fa-square-root-variable fa-sm fa-fw" aria-hidden="true"></i>&nbsp;What should we expect?</p>
         <p>The coherence length is set by the spectrum of the light: the wider the bandwidth, the faster the
         two arms decorrelate as their pathlengths separate. In terms of the frequency bandwidth
         Δ<var>f</var> — or, more usefully here, the central wavelength <var>λ</var> and wavelength bandwidth
@@ -860,11 +698,11 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
       <ol class="sub">
         <li>Now that we've aligned and characterized our OCT system, we're ready to scan objects! When you're ready, <strong>ask for a coin sample mount</strong> to swap in place of the
         rectangular mirror, and mount a coin (quarter/euro/…) on it.
-          <figure><img src="instructions_media/p18_y0367_1.jpg" alt="Coin mounted in place of the rectangular mirror" width="380"></figure>
+          <figure><img src="instructions_media/p18_y0367_1.jpg" alt="Coin mounted in place of the rectangular mirror" width="380" loading="lazy"></figure>
         </li>
         <li>Since the coin scattters light, it doesn't reflect all of the incident light back to the camera, and will appear much darker. Insert the 0.6&nbsp;OD ND filter (placed at a slight angle to avoid inter-reflections) in the light
         path to roughly match intensities from both arms. (You will need to readjust your exposure time.)
-          <figure><img src="instructions_media/p19_y0088_0.jpg" alt="ND filter inserted at an angle in the light path" width="380"></figure>
+          <figure><img src="instructions_media/p19_y0088_0.jpg" alt="ND filter inserted at an angle in the light path" width="380" loading="lazy"></figure>
         </li>
         <!-- <li><em>(Optional)</em> You may readjust your focus depending on the object surface position. You may -->
         <!-- also reduce your aperture size to increase your depth of field.</li> -->
@@ -880,7 +718,7 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
         (hold <kbd>w</kbd>, repositioning with <kbd>s</kbd> as needed) once again, over a length comparable to the error due to the difference
         in thickness of the coin and the mirror (1–2&nbsp;mm). The peak in the coherence panel gives you a
         ‘center’ position around which we will perform the scan.
-          <div class="note"><strong>Refine it automatically:</strong> once the manual sweep has the peak
+          <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Refine it automatically:</strong> once the manual sweep has the peak
           roughly in view, press <kbd>f</kbd> (with a patch selected) for a <em>fine scan</em> — it steps
           ±0.5&nbsp;mm around the current position in 10&nbsp;µm steps, measuring the contrast of your patch
           at each step, then <strong>moves the stage to the peak</strong> and saves a contrast-vs-position
@@ -890,7 +728,7 @@ python visualizer.py --step 0.01 --window-mm 0.2</code></pre>
           (±0.05&nbsp;mm in 1&nbsp;µm steps) to further refine the centre. It takes under a minute; either
           <kbd>f</kbd> or <kbd>g</kbd> cancels a running scan. It needs you to already be within ~0.5&nbsp;mm
           of the peak, so it refines the manual sweep rather than replacing it.</div> -->
-          <!-- <div class="note"><strong>Going back to a position later:</strong> write the centre down. Inside the
+          <!-- <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Going back to a position later:</strong> write the centre down. Inside the
           visualizer, press <kbd>m</kbd> and type it to go straight back. With the visualizer <em>closed</em>,
           you can also drive the stage from a terminal:
           <pre><code>python stage.py --to 3.75     # absolute, mm
@@ -902,19 +740,19 @@ python stage.py --status      # position + whether it has been homed</code></pre
           highlighted patch — the coin's rough surface makes the interference grainy and shimmering rather
           than smooth fringes:</p>
           <figure>
-            <video src="instructions_media/viz_speckle.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-            <figcaption><span class="vid-badge">video</span>Moving speckle in the highlighted patch — the sign
+            <video src="instructions_media/viz_speckle.mp4" controls muted loop playsinline width="560" height="379" poster="instructions_media/posters/viz_speckle.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Moving speckle in the highlighted patch — the sign
             that the stage is at the coin surface's depth.</figcaption>
           </figure>
           <figure>
-            <video src="instructions_media/viz_coin_path_matching.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-            <figcaption><span class="vid-badge">video</span>Pathlength matching on the coin — this is an
+            <video src="instructions_media/viz_coin_path_matching.mp4" controls muted loop playsinline width="560" height="361" poster="instructions_media/posters/viz_coin_path_matching.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Pathlength matching on the coin — this is an
             example of how things will look when you find the right spot: the patch amplitude spikes in the
             coherence panel as the stage crosses the coin's surface.</figcaption>
           </figure> -->
           and bring the coin into
           <strong>focus using its XY stage</strong> — turn the micro-adjusters until the coin's surface
-          detail is sharp in the live view.           Just like we did for the mirror, we now have them coarsely matched, using the <code>f</code> key, we can automatically find the motor position that matches with the patch on the coin:</p>
+          detail is sharp in the live view.           Just like we did for the mirror, we now have them coarsely matched, using the <code>f</code> key, we can automatically find the motor position that matches with the patch on the coin:
           <ul class="plain">
             <li>Press <kbd>f</kbd> for a <strong>coarse scan</strong>: it sweeps ±0.5&nbsp;mm around the
             current position in 10&nbsp;µm steps, plotting the patch contrast as it goes, and then tries to
@@ -925,14 +763,14 @@ python stage.py --status      # position + whether it has been homed</code></pre
             <kbd>f</kbd> or <kbd>g</kbd> again while a scan is running cancels it.)</li>
           </ul>
           <figure>
-            <video src="instructions_media/viz_scan_f.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-            <figcaption><span class="vid-badge">video</span>Pressing <kbd>f</kbd>: the coarse scan sweeps
+            <video src="instructions_media/viz_scan_f.mp4" controls muted loop playsinline width="560" height="287" poster="instructions_media/posters/viz_scan_f.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Pressing <kbd>f</kbd>: the coarse scan sweeps
             ±0.5&nbsp;mm around the current position and lands on the coin surface's contrast
             peak.</figcaption>
           </figure>
           <figure>
-            <video src="instructions_media/viz_scan_g.mp4" controls muted loop playsinline preload="metadata" width="560"></video>
-            <figcaption><span class="vid-badge">video</span>Pressing <kbd>g</kbd>: the fine scan re-sweeps
+            <video src="instructions_media/viz_scan_g.mp4" controls muted loop playsinline width="560" height="287" poster="instructions_media/posters/viz_scan_g.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Pressing <kbd>g</kbd>: the fine scan re-sweeps
             ±0.05&nbsp;mm in 1&nbsp;µm steps and resolves the full envelope around the peak.</figcaption>
           </figure>
         </li>
@@ -949,31 +787,31 @@ python stage.py --status      # position + whether it has been homed</code></pre
 python oct_scan.py --center 12.3 --range-mm 0.9 --step-mm 0.003</code></pre>
           <p>This saves a timestamped <code>stack_*.npy</code> plus a <code>*_meta.json</code> sidecar with the
           scan geometry into <code>oct_scans/</code>.</p>
-          <div class="warn"><strong>Caution:</strong> <code>oct_scan.py</code> saves the stack as a
+          <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Caution:</strong> <code>oct_scan.py</code> saves the stack as a
           <code>.npy</code> that is <strong>several&nbsp;GB</strong> in size (full resolution × hundreds of
           frames) — make sure you have disk space for it before starting the scan.</div>
         </li>
         <li>Run <code>oct_process.py</code> to recover a depth map from the scanned stack (it computes the
         mean-diff interference amplitude at every pixel and takes the depth of maximum contrast):
 <pre><code>python oct_process.py --stack oct_scans/stack_&lt;timestamp&gt;.npy</code></pre>
-          <div class="note"><strong>Tip:</strong> if you saved the stack at the original size and find the
+          <div class="note tip"><i class="fa-solid fa-lightbulb fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Tip:</strong> if you saved the stack at the original size and find the
           processing too slow, you can spatially downsample:
 <pre><code>python oct_process.py --stack oct_scans/stack_&lt;timestamp&gt;.npy -n 2
 <span class="dim"># -n 2 spatially downsamples 2x2 — purely to make the computation faster</span></code></pre></div>
           <p>It saves <code>*_depth.npy</code>, <code>*_maxamp.npy</code>, and a rendered
           <code>*_render.png</code>. To re-render with different color limits later, edit the settings at the
           top of <code>oct_view.py</code> and run it. A successful scan looks like this:</p>
-          <figure><img src="instructions_media/depth_correct.jpg" alt="Clean depth map of the coin: smooth gradient with the relief clearly resolved" width="480">
+          <figure><img src="instructions_media/depth_correct.jpg" alt="Clean depth map of the coin: smooth gradient with the relief clearly resolved" width="480" loading="lazy">
           <figcaption>Depth map from a well-centred scan — the coin's relief is cleanly resolved over a smooth
           tilt gradient. (This coin is from another experiment, so it won't match the one in the photos
           above.)</figcaption></figure>
-          <div class="warn"><strong>Caution:</strong> if your depth map looks like either of the ones below,
+          <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Caution:</strong> if your depth map looks like either of the ones below,
           part of the surface fell <em>outside</em> the scanned range — pixels clip at the first/last frame
           (flat saturated patches) or never see a peak at all (salt-and-pepper noise). Re-run the scan with a
           longer range and/or a better-centred start position.</div>
           <div class="figgrid wide">
-            <img src="instructions_media/depth_caution_clipped.jpg" alt="Depth map with large clipped yellow regions: scan range too short on one side">
-            <img src="instructions_media/depth_caution_missed.jpg" alt="Depth map that is mostly speckle noise: scan range largely missed the surface">
+            <img src="instructions_media/depth_caution_clipped.jpg" alt="Depth map with large clipped yellow regions: scan range too short on one side" width="820" height="719" loading="lazy">
+            <img src="instructions_media/depth_caution_missed.jpg" alt="Depth map that is mostly speckle noise: scan range largely missed the surface" width="820" height="719" loading="lazy">
           </div>
         </li>
         <li><em>(Optional)</em> To <strong>see</strong> what the processing sees, render a side-by-side movie
@@ -984,8 +822,8 @@ python oct_scan.py --center 12.3 --range-mm 0.9 --step-mm 0.003</code></pre>
 <pre><code>python oct_contrast_video.py -s oct_scans/stack_&lt;timestamp&gt;.npy
 <span class="dim"># -n 2 downsamples for speed; --fps and -o control the output movie</span></code></pre>
           <figure>
-            <video src="instructions_media/oct_contrast_video.mp4" controls muted loop playsinline preload="metadata" width="640"></video>
-            <figcaption><span class="vid-badge">video</span>Raw frames (left) vs interference amplitude
+            <video src="instructions_media/oct_contrast_video.mp4" controls muted loop playsinline width="640" height="358" poster="instructions_media/posters/oct_contrast_video.jpg" preload="none"></video>
+            <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Raw frames (left) vs interference amplitude
             (right) for a coin scan — the contrast band sweeping across the surface is the coherence gate
             crossing each pixel's depth; its per-pixel peak position is the depth map.</figcaption>
           </figure>
@@ -996,7 +834,7 @@ python oct_scan.py --center 12.3 --range-mm 0.9 --step-mm 0.003</code></pre>
     <section class="step" id="a9">
       <h3><span class="step-num">5</span>Scanning other objects</h3>
       <p>Replace the coin with another object (or coin) of your choice and try doing the same!</p>
-      <div class="note tip"><strong>Bonus:</strong> <code>depth_to_pointcloud.py</code> converts a depth map
+      <div class="note tip"><i class="fa-solid fa-lightbulb fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Bonus:</strong> <code>depth_to_pointcloud.py</code> converts a depth map
       (plus its metadata sidecars) into a 3D point cloud you can inspect interactively.</div>
     </section>
 
@@ -1014,7 +852,7 @@ python oct_scan.py --center 12.3 --range-mm 0.9 --step-mm 0.003</code></pre>
 <pre><code>git clone https://github.com/cmu-ci-lab/summer-school.git
 cd summer-school</code></pre>
       <p>If fixes are posted during the course, <code>git pull</code> picks them up.</p>
-      <div class="note"><strong>Heads-up — Python required:</strong> everything runs from Python inside a
+      <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Heads-up — Python required:</strong> everything runs from Python inside a
       virtual environment. If possible, have
       <a href="https://www.anaconda.com/download">Anaconda</a> (or
       <a href="https://github.com/conda-forge/miniforge">Miniconda/Miniforge</a>) installed before the
@@ -1029,7 +867,7 @@ cd summer-school</code></pre>
 ./setup.sh
 <span class="cm"># or, to force a venv even when conda exists:</span>
 FORCE_VENV=1 ./setup.sh</code></pre>
-      <div class="note"><strong>What the script actually does</strong> (it's safe to re-run any time — every
+      <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>What the script actually does</strong> (it's safe to re-run any time — every
       step is skipped if already done, and nothing outside the repo and the <code>iccp-oct</code>
       environment is touched):
       <ul class="plain">
@@ -1086,7 +924,7 @@ source .venv/bin/activate        <span class="cm"># Windows: .venv\Scripts\activ
         support</em> — IDS cameras are Windows-only in this course (which is why the macOS section below has
         no IDS entry).</li>
       </ul>
-      <div class="warn"><strong>Caution:</strong> if you are using an <strong>IDS camera</strong>, do
+      <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Caution:</strong> if you are using an <strong>IDS camera</strong>, do
       <em>NOT</em> install Vimba&nbsp;X — install only the IDS Software Suite. Installing Vimba&nbsp;X
       alongside the IDS setup can brick the system. Only install the SDK for the camera you actually
       have.</div>
@@ -1103,16 +941,16 @@ source .venv/bin/activate        <span class="cm"># Windows: .venv\Scripts\activ
         <li><strong>IDS camera:</strong> not supported on macOS (the IDS Software Suite is Windows-only in
         this course) — use a Windows laptop for IDS rigs.</li>
       </ul>
-      <div class="warn"><strong>Caution (macOS):</strong> the Vimba&nbsp;X installer package may be blocked
+      <div class="warn"><i class="fa-solid fa-triangle-exclamation fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Caution (macOS):</strong> the Vimba&nbsp;X installer package may be blocked
       by macOS when you run it. If that happens, open <em>System Settings → Privacy&nbsp;&amp;&nbsp;Security</em>,
       scroll down to the message about the blocked installer, and click <em>Open&nbsp;Anyway</em> to allow it
       to run.</div>
 
-      <div class="note"><strong>Where's the wheel?</strong> Once you install Vimba&nbsp;X, the vmbpy wheel is
+      <div class="note"><i class="fa-solid fa-circle-info fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Where's the wheel?</strong> Once you install Vimba&nbsp;X, the vmbpy wheel is
       <em>inside</em> the installed SDK (at the paths listed above) — you don't download it separately. If
       you can't find it, run <code>python test_hardware.py</code>: it searches the standard install
       locations for you and prints the wheel's path along with the exact <code>pip install</code> command.</div>
-      <div class="note tip"><strong>Tip:</strong> on either platform, install the vmbpy wheel into the
+      <div class="note tip"><i class="fa-solid fa-lightbulb fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Tip:</strong> on either platform, install the vmbpy wheel into the
       <em>project environment</em> (activate <code>iccp-oct</code> or the venv first, then
       <code>pip install &lt;path-to-vmbpy-*.whl&gt;</code>) — not into the system Python, or imports will
       fail when you run from the project env.</div>
