@@ -1,0 +1,411 @@
+/* ICCP summer-school lab guide — page-specific styles.
+
+   The design tokens below mirror :root in the Carnegie Mellon computational imaging lab
+   base sheet (website_templates/shared/style.css), so this guide reads as part of the
+   same family as the lab's course, paper, tutorial and personal pages. The layout itself
+   — sidebar table of contents, numbered step cards, callouts, theory panels — is
+   specific to this long-form guide and has no counterpart in the base sheet.
+
+   This is a vendored look-alike rather than an import of the base sheet: that sheet is
+   served at /shared/ under the imaging.cs.cmu.edu docroot, and this site is published
+   from a different origin at a project subpath (cmu-ci-lab.github.io/summer-school/),
+   where a root-absolute /shared/ URL does not resolve.
+*/
+
+/* ── Palette (light) ── */
+:root {
+	color-scheme: light dark;
+	--bg:          #fff;
+	--sidebar:     #f0f0f0;
+	--surface:     #f0f0f0;
+	--surface-2:   #d0d0d0;
+	--line:        #ddd;
+	--line-strong: #c0c0c0;
+	--text:        #000;
+	--text-2:      #444;
+	--muted:       #666;
+	--link:        #1772d0;
+	--accent:      #b35500;
+	--accent-bg:   #fff3e0;
+	/* Same hues, darkened just enough to clear WCAG AA on the --surface grey that
+	   callouts, code blocks and theory panels sit on (#b35500 is 4.37:1 there). */
+	--link-on-surface:   #166dc7;
+	--accent-on-surface: #af5300;
+	--kbd-bg:      #fff;
+	--body-font:   'Avenir Next Pro', 'Avenir Next', Avenir, 'Lato', Verdana, Helvetica, sans-serif;
+}
+
+/* ── Palette (dark) ──
+   Same hues as above, lifted in lightness so every foreground/background pair clears
+   WCAG AA (4.5:1) on the dark surfaces. The lab base sheet is light-only; this guide is
+   long enough to be read in a dim optics room, so both schemes are maintained here. */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg:          #141414;
+		--sidebar:     #1e1e1e;
+		--surface:     #1e1e1e;
+		--surface-2:   #2a2a2a;
+		--line:        #333;
+		--line-strong: #4a4a4a;
+		--text:        #eee;
+		--text-2:      #c0c0c0;
+		--muted:       #9a9a9a;
+		--link:        #5ba3e8;
+		--accent:      #e08a45;
+		--accent-bg:   #2e2216;
+		--link-on-surface:   #5ba3e8;
+		--accent-on-surface: #e08a45;
+		--kbd-bg:      #2a2a28;
+	}
+}
+
+/* ── Fonts ──
+   Lato is self-hosted (SIL Open Font License, see shared/fonts/Lato/OFL.txt).
+
+   The body font stack asks for Avenir Next Pro first, then the system 'Avenir Next'
+   that ships with macOS and iOS, then Lato. Lab pages render in Avenir Next Pro, which
+   is licensed and cannot be committed to this public repository — so on Apple devices
+   readers get genuine Avenir Next from the system, and everyone else gets Lato, which
+   is the lab sheet's own declared fallback.
+
+   To serve the real Avenir Next Pro to every visitor, uncomment the block below and add
+   an Access-Control-Allow-Origin header for *.woff2 on imaging.cs.cmu.edu. Check your
+   MyFonts license first: the kit was licensed for that domain, and this would serve it
+   to pages on github.io. Keep the Lato faces either way — students open this guide from
+   a local clone during the lab, where a cross-origin fetch may not be reachable.
+
+@font-face {
+	font-family: 'Avenir Next Pro';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url(https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/avenirnext-regular.woff2) format('woff2');
+}
+
+@font-face {
+	font-family: 'Avenir Next Pro';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url(https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/avenirnext-demi.woff2) format('woff2');
+}
+
+@font-face {
+	font-family: 'Avenir Next Pro';
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+	src: url(https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/avenirnext-italic.woff2) format('woff2');
+}
+
+@font-face {
+	font-family: 'Avenir Next Pro';
+	font-style: italic;
+	font-weight: 700;
+	font-display: swap;
+	src: url(https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/avenirnext-demiitalic.woff2) format('woff2');
+}
+*/
+
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url(../shared/fonts/Lato/lato-regular.woff2) format('woff2');
+}
+
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url(../shared/fonts/Lato/lato-bold.woff2) format('woff2');
+}
+
+@font-face {
+	font-family: 'Lato';
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+	src: url(../shared/fonts/Lato/lato-italic.woff2) format('woff2');
+}
+
+@font-face {
+	font-family: 'Lato';
+	font-style: italic;
+	font-weight: 700;
+	font-display: swap;
+	src: url(../shared/fonts/Lato/lato-bolditalic.woff2) format('woff2');
+}
+
+/* Media never overflows its container; height follows to keep the aspect ratio. The
+   base lab sheet carries the same rule, and the explicit width/height attributes on this
+   page's figures make it load-bearing: without it an image renders at its intrinsic
+   width and blows out the layout on a phone. */
+img, video {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Long paths and command lines in inline code must not force a horizontal scroll. */
+body {
+	overflow-wrap: break-word;
+}
+
+html { background: var(--bg); scroll-padding-top: 24px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+	background: var(--bg);
+	color: var(--text);
+	font-family: var(--body-font);
+	line-height: 1.65;
+	font-size: 16px;
+	margin: 0;
+}
+
+/* ── Layout ── */
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+	width: 280px; flex: 0 0 280px;
+	background: var(--sidebar);
+	border-right: 1px solid var(--line-strong);
+	padding: 32px 20px 32px 28px;
+	box-sizing: border-box;
+	position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.content { flex: 1; min-width: 0; padding: 40px 48px 96px; box-sizing: border-box; }
+.content-inner { max-width: 76ch; }
+
+/* The sidebar has to fold away well before the lab sheet's 48em breakpoint: it is a
+   fixed 280px, so below roughly 860px the content column stops being readable. */
+@media (max-width: 53.75em) {
+	.layout { display: block; }
+	.sidebar { position: static; width: auto; height: auto; border-right: none; border-bottom: 1px solid var(--line-strong); }
+	.content { padding: 32px 20px 64px; }
+	#logo { float: right; margin: 0 0 12px 16px; }
+}
+
+/* ── Sidebar ── */
+#logo { display: block; margin: 0 0 16px; }
+.side-title { font-size: 15px; font-weight: 700; letter-spacing: .01em; margin: 0 0 2px; }
+a.side-title { display: block; color: var(--text); text-decoration: none; }
+a.side-title:hover, a.side-title:focus { color: var(--accent); }
+.sidebar nav a.side-sub-link { padding-left: 2.2em; font-size: 12.5px; color: var(--muted); }
+.sidebar nav a.side-sub-link:hover, .sidebar nav a.side-sub-link:focus { color: var(--text); }
+.side-sub { font-size: 12.5px; color: var(--muted); margin: 0 0 20px; }
+.side-part { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 20px 0 6px; }
+.sidebar nav a {
+	display: block; color: var(--text-2); text-decoration: none;
+	font-size: 13.5px; padding: 3px 8px; border-radius: 0.25em;
+}
+.sidebar nav a:hover, .sidebar nav a:focus { background: var(--bg); color: var(--accent); }
+.side-num { display: inline-block; width: 1.4em; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ── Header ──
+   .venue and ul.details carry the same look as the lab course/tutorial templates, which
+   is what makes a visitor recognise this as one of the lab's pages. */
+.venue {
+	margin: 0.83em 0;
+	font-size: 125%;
+	font-weight: bold;
+	color: var(--text-2);
+}
+h1 { font-size: 34px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -.015em; text-wrap: balance; }
+.doc-sub { font-size: 17px; color: var(--text-2); margin: 0 0 20px; text-wrap: pretty; }
+
+ul.details {
+	margin: 0 0 1.5em 0;
+	padding-left: 0;
+	list-style-type: none;
+	font-weight: bold;
+	font-size: 110%;
+}
+
+ul.details > li { margin: 0 1em 0.35em 0; }
+
+/* Teaser figure in the header, spanning the content column like the lab templates. */
+#teaser { margin: 0 0 8px; }
+#teaser > img { width: 100%; margin: 0 0 0.5em 0; }
+#teaser > figcaption { font-style: italic; font-size: 90%; }
+
+/* ── Part banners & sections ── */
+.part {
+	display: flex; align-items: baseline; gap: 12px;
+	margin: 56px 0 8px; padding-top: 24px; border-top: 2px solid var(--line-strong);
+}
+.part-tag {
+	font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+	color: var(--bg); background: var(--accent); padding: 3px 10px; border-radius: 999px;
+	white-space: nowrap;
+}
+.part h2 { font-size: 26px; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.part-note { color: var(--text-2); font-size: 14.5px; margin: 4px 0 24px; }
+
+.step { margin: 36px 0; }
+.step h3 {
+	font-size: 19px; margin: 0 0 10px; display: flex; align-items: center; gap: 10px;
+	text-wrap: balance;
+}
+.step-num {
+	flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%;
+	background: var(--surface); border: 1px solid var(--line-strong); color: var(--text-2);
+	font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
+	font-variant-numeric: tabular-nums;
+}
+.step h4 {
+	font-size: 16.5px; margin: 26px 0 8px; padding-bottom: 4px;
+	border-bottom: 1px solid var(--line);
+}
+.step ol.sub { margin: 8px 0 8px; padding-left: 22px; list-style: lower-alpha; }
+.step ol.sub > li { margin: 8px 0; color: var(--text); }
+.step ol.roman { list-style: lower-roman; padding-left: 22px; }
+.step p { margin: 8px 0; text-wrap: pretty; }
+
+/* ── Figures ── */
+figure { margin: 14px 0; }
+figure video {
+	border-radius: 0.25em; border: 1px solid var(--line-strong);
+	display: block; max-width: 100%; height: auto; background: #000;
+}
+.vid-badge {
+	display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+	text-transform: uppercase; color: var(--accent-on-surface);
+	border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+	border-radius: 999px; padding: 0 8px; margin-right: 6px; vertical-align: 1px;
+}
+.vidgrid { display: flex; flex-wrap: wrap; gap: 14px; margin: 12px 0; }
+.vidgrid figure { flex: 0 1 260px; min-width: 0; margin: 0; }
+.figgrid { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.figgrid img, figure > img {
+	border-radius: 0.25em; border: 1px solid var(--line-strong);
+	display: block; max-width: 100%; height: auto;
+}
+.figgrid img { flex: 1 1 220px; min-width: 0; max-width: 360px; object-fit: cover; }
+.figgrid.wide img { max-width: 480px; }
+figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+/* A row of figures that keeps its proportions rather than wrapping: the two result
+   panels under the header. Flex ratios match the assets' aspect ratios. */
+.figrow { display: flex; flex-wrap: nowrap; gap: 14px; align-items: flex-start; margin: 12px 0; }
+.figrow > figure { min-width: 0; margin: 0; }
+.figrow > figure > img, .figrow > figure > video { width: 100%; height: auto; }
+.figrow > .depth { flex: 1.157 1 0; }
+.figrow > .transient { flex: 1.789 1 0; }
+
+@media (max-width: 53.75em) {
+	.figrow { flex-wrap: wrap; }
+	.figrow > .depth, .figrow > .transient { flex: 1 1 100%; }
+}
+
+/* ── Callouts ── */
+.note, .warn {
+	border-radius: 0.25em; padding: 12px 16px; margin: 14px 0; font-size: 14.5px;
+	border: 1px solid var(--line-strong); background: var(--surface);
+}
+.note strong:first-of-type { color: var(--link-on-surface); }
+.note > i, .warn > i { margin-right: 0.15em; }
+.note > i { color: var(--link-on-surface); }
+.warn { background: var(--accent-bg); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.warn strong:first-of-type, .warn > i { color: var(--accent); }
+.tip strong:first-of-type, .tip > i { color: var(--accent-on-surface); }
+
+/* ── Theory panel & math ── */
+.theory {
+	border: 1px solid var(--line-strong); border-left: 3px solid var(--accent);
+	background: var(--surface); border-radius: 0.25em;
+	padding: 14px 18px; margin: 18px 0; font-size: 15px;
+}
+.theory-title {
+	font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em;
+	color: var(--accent-on-surface); margin: 0 0 8px;
+}
+.theory p { margin: 8px 0; }
+.math {
+	font-family: "STIX Two Math", "Cambria Math", Georgia, "Times New Roman", serif;
+	font-size: 19px; text-align: center; margin: 14px 0;
+}
+.math var, .theory var { font-style: italic; font-family: Georgia, "Times New Roman", serif; }
+.frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 3px; }
+.frac .num { display: block; padding: 0 6px 1px; border-bottom: 1px solid currentColor; }
+.frac .den { display: block; padding: 1px 6px 0; }
+.ph { color: var(--accent); font-size: 13px; font-weight: 600; }
+
+/* ── Code / kbd ──
+   Light code blocks, matching the lab base sheet rather than the dark blocks this guide
+   used before. */
+pre, code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	background-color: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: 0.25em;
+}
+pre {
+	color: var(--text);
+	padding: 14px 18px; overflow-x: auto;
+	font-size: 13.5px; line-height: 1.6; margin: 12px 0;
+}
+:not(pre) > code { padding: 0.1em 0.3em; font-size: 87%; }
+pre code { padding: 0; background: none; border: 0; border-radius: 0; font-size: inherit; }
+pre .cm { color: var(--muted); font-style: italic; }
+pre .dim { color: var(--muted); }
+pre .ok { color: var(--accent-on-surface); font-weight: 700; }
+kbd {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px;
+	background: var(--kbd-bg); border: 1px solid var(--line-strong);
+	border-bottom-width: 2px; border-radius: 0.25em; padding: 1px 7px;
+}
+
+/* ── Misc ── */
+a { color: var(--link); text-decoration: none; }
+a:focus, a:hover, a:active { color: var(--accent); text-decoration: none; }
+.note a:hover, .note a:focus, .warn a:hover, .warn a:focus,
+.theory a:hover, .theory a:focus, pre a:hover, pre a:focus { color: var(--accent-on-surface); }
+hr.soft { border: none; border-top: 1px solid var(--line); margin: 48px 0 0; }
+ul.plain { padding-left: 22px; }
+ul.plain li { margin: 6px 0; }
+.footer { color: var(--muted); font-size: 13.5px; margin-top: 28px; }
+
+/* In-page anchor targets stop short of the viewport edge instead of sitting flush. */
+[id] { scroll-margin-top: 1em; }
+
+/* ── Accessibility helpers (from the lab base sheet) ── */
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+.skip-link:focus {
+	position: fixed;
+	top: 0.5em;
+	left: 0.5em;
+	width: auto;
+	height: auto;
+	margin: 0;
+	padding: 0.5em 1em;
+	clip: auto;
+	clip-path: none;
+	background: var(--surface);
+	border: 1px solid var(--line-strong);
+	z-index: 100;
+}
+
+/* ── Printing ── */
+@media print {
+	body { color: #000; }
+	.layout { display: block; }
+	.sidebar { display: none; }
+	.content { padding: 0; }
+	.content-inner { max-width: none; }
+	a { color: #000; text-decoration: underline; }
+	.skip-link, video { display: none; }
+	figure, .step { break-inside: avoid; }
+}
