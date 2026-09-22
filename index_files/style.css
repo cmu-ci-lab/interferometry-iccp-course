@@ -383,7 +383,19 @@ a:focus, a:hover, a:active { color: var(--accent); text-decoration: none; }
 hr.soft { border: none; border-top: 1px solid var(--line); margin: 48px 0 0; }
 ul.plain { padding-left: 22px; }
 ul.plain li { margin: 6px 0; }
-.footer { color: var(--muted); font-size: 13.5px; margin-top: 28px; }
+
+/* Page credits. The lab base sheet styles `footer` italic; matching it here means one
+   fewer thing that differs from the templates. */
+footer {
+	color: var(--muted);
+	font-size: 13.5px;
+	font-style: italic;
+	margin-top: 40px;
+	padding-top: 16px;
+	border-top: 1px solid var(--line);
+}
+
+footer p { margin: 6px 0; }
 
 /* In-page anchor targets stop short of the viewport edge instead of sitting flush. */
 [id] { scroll-margin-top: 1em; }
