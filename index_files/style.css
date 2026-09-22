@@ -203,11 +203,14 @@ a.side-title:hover, a.side-title:focus { color: var(--accent); }
 /* ── Header ──
    .venue and ul.details carry the same look as the lab course/tutorial templates, which
    is what makes a visitor recognise this as one of the lab's pages. */
+/* Matches .authors/.venue in the lab base sheet: the venue line reads as text under the
+   title, not as a section heading. No colour override there, so none here either. The
+   sheet's `width: auto` and `text-align: left` are no-ops in this layout - they exist to
+   undo the base sheet's justified, inset `p` rules, which this page does not have. */
 .venue {
 	margin: 0.83em 0;
 	font-size: 125%;
 	font-weight: bold;
-	color: var(--text-2);
 }
 h1 { font-size: 34px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -.015em; text-wrap: balance; }
 .doc-sub { font-size: 17px; color: var(--text-2); margin: 0 0 20px; text-wrap: pretty; }
