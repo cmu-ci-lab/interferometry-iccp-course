@@ -158,7 +158,10 @@ body {
 	background: var(--bg);
 	color: var(--text);
 	font-family: var(--body-font);
-	line-height: 1.65;
+	/* 1.3 is the lab base sheet's leading. Everything in the header inherits it, so this
+	   one declaration is what makes the venue line, the details list and the teaser sit at
+	   the same heights here as on a deployed lab page. */
+	line-height: 1.3;
 	font-size: 16px;
 	margin: 0;
 }
@@ -222,12 +225,10 @@ a.side-title:hover, a.side-title:focus { color: var(--accent); }
 	font-weight: bold;
 }
 /* Matches the course template's h1: browser-default 2em at 0.67em margins, with the base
-   sheet's colour and balanced wrapping. The explicit line-height reproduces the course
-   h1's 1.3 line box, which it inherits from a body this page sets to 1.65. The colour is
-   load-bearing now that the title is wrapped in a link. */
+   sheet's colour and balanced wrapping. Line-height is inherited from the body, as it is
+   in the template. The colour is load-bearing now that the title is wrapped in a link. */
 h1 {
 	font-size: 2em;
-	line-height: 1.3;
 	margin: 0.67em 0;
 	color: var(--text);
 	text-wrap: balance;
