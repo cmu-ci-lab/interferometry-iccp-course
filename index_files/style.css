@@ -317,6 +317,34 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
 .optioncard.recommended { border-top-color: var(--accent); }
 .optioncard.recommended .label { color: var(--accent-on-surface); }
 
+/* ── Tables ──
+   Mirrors the lab base sheet: collapsed borders, a shaded header row with a heavier rule
+   under it, and zebra striping. One deliberate divergence — the base sheet's
+   `tbody tr:hover` swaps in a grey background, and no grey light enough to sit behind a
+   link at 4.5:1 is still distinguishable from the zebra stripe (#1772d0 on #d0d0d0 is
+   3.13:1). The row marker here is an inset rule instead, reusing the left-accent idiom
+   the theory panel already uses, so hover costs no contrast. */
+table { border-collapse: collapse; width: 100%; }
+
+td, th {
+	padding: 0.4em 0.5em;
+	border: 1px solid var(--line-strong);
+	text-align: left;
+	vertical-align: top;
+}
+
+th { font-weight: 700; background: var(--surface); }
+thead th { border-bottom-width: 2px; }
+tbody tr:nth-child(even) { background: var(--surface); }
+tbody tr:hover { box-shadow: inset 3px 0 0 var(--accent); }
+
+/* Every other row is --surface, where the base link colour is only 4.23:1. */
+td a { color: var(--link-on-surface); }
+td a:hover, td a:focus, td a:active { color: var(--accent-on-surface); }
+
+/* Lets a wide table scroll sideways without dropping its table semantics. */
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+
 /* ── Callouts ── */
 .note, .warn {
 	border-radius: 0.25em; padding: 12px 16px; margin: 14px 0; font-size: 14.5px;
@@ -438,5 +466,5 @@ footer p { margin: 6px 0; }
 	.content-inner { max-width: none; }
 	a { color: #000; text-decoration: underline; }
 	.skip-link, video { display: none; }
-	figure, .step { break-inside: avoid; }
+	figure, .step, tr { break-inside: avoid; }
 }

@@ -43,6 +43,8 @@
     <a class="side-title" href="#top">Interferometric Imaging</a>
     <p class="side-sub">ICCP Summer School</p>
     <nav aria-label="Guide contents">
+      <p class="side-part">Before you start</p>
+      <a href="#parts"><span class="side-num">·</span>Parts and equipment</a>
       <p class="side-part">Part 1 · Construction</p>
       <a href="#c1"><span class="side-num">1</span>The breadboard</a>
       <a href="#c2"><span class="side-num">2</span>Beamsplitter post</a>
@@ -89,7 +91,7 @@
         <!--<li><i class="fa-solid fa-person-chalkboard fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Instructors: <a href="https://instructor.website/">Instructor name</a></li>-->
         <li><i class="fa-solid fa-code-branch fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Code: <a href="https://github.com/cmu-ci-lab/summer-school">cmu-ci-lab/summer-school</a></li>
         <li><i class="fa-solid fa-file-pdf fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Presentation: <a href="index_files/presentation.pdf">slides (PDF)</a></li>
-        <li><nav aria-label="Quick links"><i class="fa-solid fa-bars fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Quick links: <a href="#part1">construction</a>, <a href="#part2">alignment</a>, <a href="#part3">OCT</a>, <a href="#software">software</a>, <a href="#troubleshooting">troubleshooting</a></nav></li>
+        <li><nav aria-label="Quick links"><i class="fa-solid fa-bars fa-sm fa-fw" aria-hidden="true"></i>&nbsp;Quick links: <a href="#parts">parts</a>, <a href="#part1">construction</a>, <a href="#part2">alignment</a>, <a href="#part3">OCT</a>, <a href="#software">software</a>, <a href="#troubleshooting">troubleshooting</a></nav></li>
       </ul>
 
       <figure id="teaser">
@@ -115,6 +117,43 @@
     <div class="note tip"><i class="fa-solid fa-lightbulb fa-sm fa-fw" aria-hidden="true"></i>&nbsp;<strong>Tip:</strong> steps throughout this guide include short
     <span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span> clips — watch them as you go; they show you what you should expect
     to see at each stage, both on the breadboard and on screen.</div>
+
+    <section class="step" id="parts">
+      <h3>Parts and equipment</h3>
+      <p>Check your bench against this list before you start &mdash; a missing part is much
+      easier to chase down now than halfway through alignment. The quantity column is left
+      blank; fill it in for the kit your benches are issued.</p>
+      <!-- TODO for the course organisers: fill in the Qty column, and add or remove rows so
+           this matches what each bench actually gets. The five Thorlabs part numbers are the
+           ones the guide names explicitly; everything else is described in prose only and
+           may vary between benches and between offerings. -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Part</th><th scope="col">Qty</th><th scope="col">Used in</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Optical breadboard</td><td>&mdash;</td><td><a href="#c1">Construction 1</a></td></tr>
+            <tr><td>Beamsplitter cube on its rotation stage, with post</td><td>&mdash;</td><td><a href="#c2">Construction 2</a></td></tr>
+            <tr><td>Thorlabs <strong>AC254-100-A-ML</strong> 100&nbsp;mm achromatic lens</td><td>&mdash;</td><td><a href="#c3">Construction 3</a></td></tr>
+            <tr><td>LED with telescoping tube (<strong>SM1NR1</strong> or <strong>SM1U</strong>)</td><td>&mdash;</td><td><a href="#c3">Construction 3</a></td></tr>
+            <tr><td>LED driver and power adapter</td><td>&mdash;</td><td><a href="#c3">Construction 3</a></td></tr>
+            <tr><td>Nikon 105&nbsp;mm (or 200&nbsp;mm) lens</td><td>&mdash;</td><td><a href="#c4">Construction 4</a></td></tr>
+            <tr><td>C-mount camera</td><td>&mdash;</td><td><a href="#c4">Construction 4</a></td></tr>
+            <tr><td>F–C mount adapter</td><td>&mdash;</td><td><a href="#c4">Construction 4</a></td></tr>
+            <tr><td>XY translation stage</td><td>&mdash;</td><td><a href="#c5">Construction 5 and 6</a></td></tr>
+            <tr><td>Thorlabs <strong>Z825B</strong> motorised actuator</td><td>&mdash;</td><td><a href="#c5">Construction 5</a></td></tr>
+            <tr><td>Thorlabs <strong>KDC101</strong> K-cube controller (red cube)</td><td>&mdash;</td><td><a href="#c5">Construction 5</a></td></tr>
+            <tr><td>Round mirror and mount (reference arm)</td><td>&mdash;</td><td><a href="#c5">Construction 5</a></td></tr>
+            <tr><td>Rectangular mirror and post (object arm)</td><td>&mdash;</td><td><a href="#c6">Construction 6</a></td></tr>
+            <tr><td>Base rotation stage</td><td>&mdash;</td><td><a href="#c7">Construction 7</a></td></tr>
+            <tr><td>5/64 hex key</td><td>&mdash;</td><td><a href="#c7">Construction 7</a></td></tr>
+            <tr><td>Laptop with two free USB ports</td><td>&mdash;</td><td><a href="#a0">Alignment 1</a></td></tr>
+            <tr><td>A coin, or another object to scan</td><td>&mdash;</td><td><a href="#a8">OCT 4</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <!-- ════════════════ PART 1 ════════════════ -->
     <div class="part" id="part1">
