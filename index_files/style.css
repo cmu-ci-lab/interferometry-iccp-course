@@ -16,17 +16,6 @@
 :root {
 	color-scheme: light dark;
 
-	/* Shared with the lab base sheet (website_templates/shared/style.css): same names, same
-	   values, so the two :root blocks can be diffed line for line. */
-	--text:          #000;
-	--link:          #1772d0;
-	--accent:        #b35500;
-	--surface:       #f0f0f0;
-	--border-strong: #c0c0c0;
-	--border-soft:   #ddd;
-	--award-bg:      #fff3e0;
-	--body-font:     'Avenir Next Pro', 'Lato', Verdana, Helvetica, sans-serif;
-
 	/* Specific to this guide. The base sheet has no equivalents: it is light-only, so it
 	   needs no explicit page background, and it has no long-form components that call for a
 	   secondary or muted text tone. The -on-surface pair are the shared hues darkened just
@@ -80,97 +69,55 @@
    https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/ and add an
    Access-Control-Allow-Origin header for *.woff2 there - but check the MyFonts license
    first, since the kit was licensed for that domain, not for github.io. */
-@font-face {
-	font-family: 'Avenir Next Pro';
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-	src: url(../shared/fonts/AvenirNext/avenirnext-regular.woff2) format('woff2');
-}
-
-@font-face {
-	font-family: 'Avenir Next Pro';
-	font-style: normal;
-	font-weight: 700;
-	font-display: swap;
-	src: url(../shared/fonts/AvenirNext/avenirnext-demi.woff2) format('woff2');
-}
-
-@font-face {
-	font-family: 'Avenir Next Pro';
-	font-style: italic;
-	font-weight: 400;
-	font-display: swap;
-	src: url(../shared/fonts/AvenirNext/avenirnext-italic.woff2) format('woff2');
-}
-
-@font-face {
-	font-family: 'Avenir Next Pro';
-	font-style: italic;
-	font-weight: 700;
-	font-display: swap;
-	src: url(../shared/fonts/AvenirNext/avenirnext-demiitalic.woff2) format('woff2');
-}
-
-@font-face {
-	font-family: 'Lato';
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-	src: url(../shared/fonts/Lato/lato-regular.woff2) format('woff2');
-}
-
-@font-face {
-	font-family: 'Lato';
-	font-style: normal;
-	font-weight: 700;
-	font-display: swap;
-	src: url(../shared/fonts/Lato/lato-bold.woff2) format('woff2');
-}
-
-@font-face {
-	font-family: 'Lato';
-	font-style: italic;
-	font-weight: 400;
-	font-display: swap;
-	src: url(../shared/fonts/Lato/lato-italic.woff2) format('woff2');
-}
-
-@font-face {
-	font-family: 'Lato';
-	font-style: italic;
-	font-weight: 700;
-	font-display: swap;
-	src: url(../shared/fonts/Lato/lato-bolditalic.woff2) format('woff2');
-}
-
-/* Media never overflows its container; height follows to keep the aspect ratio. The
-   base lab sheet carries the same rule, and the explicit width/height attributes on this
-   page's figures make it load-bearing: without it an image renders at its intrinsic
-   width and blows out the layout on a phone. */
 img, video {
 	max-width: 100%;
 	height: auto;
 }
 
-/* Long paths and command lines in inline code must not force a horizontal scroll. */
-body {
-	overflow-wrap: break-word;
-}
-
 html { background: var(--bg); scroll-padding-top: 24px; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+/* ── Undo the base sheet's single-column page ──
+   The base sheet lays out a centred 60em page: it caps the body width, indents every block
+   element 1em from the left, justifies it and sizes it at calc(100% - 1em). This page is a
+   flex layout with a sidebar, and its figure grids, option cards and video rows are flex
+   children that those widths break.
+
+   `revert` rolls these back to the browser defaults the components below were built
+   against, rather than zeroing the indent and keeping the base sheet's block margins:
+   those margins also land on nested lists and on paragraphs inside list items, which grew
+   Parts 2 and 3 by about 1400px each. Font, colour, leading, and every component the base
+   sheet defines still come from it - only its block-layout model is replaced. */
 body {
 	background: var(--bg);
-	color: var(--text);
-	font-family: var(--body-font);
-	/* 1.3 is the lab base sheet's leading. Everything in the header inherits it, so this
-	   one declaration is what makes the venue line, the details list and the teaser sit at
-	   the same heights here as on a deployed lab page. */
-	line-height: 1.3;
-	font-size: 16px;
+	/* Long paths and command lines in inline code must not force a horizontal scroll. */
+	overflow-wrap: break-word;
+	max-width: none;
 	margin: 0;
+	padding: 0;
 }
+
+p, ul, ol, iframe, table, figure, pre {
+	text-align: revert;
+	margin: revert;
+	width: revert;
+}
+
+li { margin: revert; }
+
+/* The base sheet gives every <video> the content-column width, which is right for a paper
+   or course page but not here: this guide authors each clip's display size with the HTML
+   width attribute, and that is a presentational hint, so *any* author-level width
+   declaration beats it. Without these the clips jump to their intrinsic resolution - the
+   540x960 phone captures rendered at 540px instead of 300px, which alone added ~1400px to
+   each of Parts 2 and 3. A new clip needs its width adding here. */
+video { margin: revert; }
+video[width="300"]  { width: 300px; }
+video[width="540"]  { width: 540px; }
+video[width="560"]  { width: 560px; }
+video[width="640"]  { width: 640px; }
+video[width="1428"] { width: 1428px; }
+
+pre { width: revert; }
 
 /* ── Layout ── */
 .layout { display: flex; min-height: 100vh; }
@@ -212,49 +159,28 @@ a.side-title:hover, a.side-title:focus { color: var(--accent); }
 .side-num { display: inline-block; width: 1.4em; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 /* ── Header ──
-   .venue and ul.details carry the same look as the lab course/tutorial templates, which
-   is what makes a visitor recognise this as one of the lab's pages. */
-/* Matches .authors/.venue in the lab base sheet: the venue line reads as text under the
-   title, not as a section heading. No colour override there, so none here either. The
-   sheet's `width: auto` and `text-align: left` are no-ops in this layout - they exist to
-   undo the base sheet's justified, inset `p` rules, which this page does not have. */
-/* Lab logo, floated into the top-right corner of the content column exactly as in the
-   base sheet. The title and venue wrap beside it; the details list and teaser clear it. */
-#logo {
-	float: right;
-	margin-left: 2em;
-}
-
-.venue {
-	margin: 0.83em 0;
-	font-size: 125%;
-	font-weight: bold;
-}
-/* Matches the course template's h1: browser-default 2em at 0.67em margins, with the base
-   sheet's colour and balanced wrapping. Line-height is inherited from the body, as it is
-   in the template. The colour is load-bearing now that the title is wrapped in a link. */
+   #logo, .venue and .skip-link now come from the base sheet unchanged. What is left here
+   is the page title, the lead sentence the templates have no equivalent for, and the
+   details list's box - the base sheet sizes and de-bullets ul.details but leaves its
+   padding and margins to the global block rule this page replaces. */
 h1 {
 	font-size: 2em;
 	margin: 0.67em 0;
 	color: var(--text);
 	text-wrap: balance;
 }
+
 .doc-sub { font-size: 17px; color: var(--text-2); margin: 0 0 20px; text-wrap: pretty; }
 
 ul.details {
 	margin: 0 0 1em 0;
 	padding-left: 0;
-	list-style-type: none;
-	font-weight: bold;
-	font-size: 110%;
 }
 
 ul.details > li { margin: 0 1em 0.5em 0; }
 
 /* Teaser figure in the header, spanning the content column like the lab templates. */
 #teaser { margin: 0 0 8px; }
-#teaser > img { width: 100%; margin: 0 0 0.5em 0; }
-#teaser > figcaption { font-style: italic; font-size: 90%; }
 
 /* ── Part banners & sections ── */
 .part {
@@ -353,7 +279,9 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
    link at 4.5:1 is still distinguishable from the zebra stripe (#1772d0 on #d0d0d0 is
    3.13:1). The row marker here is an inset rule instead, reusing the left-accent idiom
    the theory panel already uses, so hover costs no contrast. */
-table { border-collapse: collapse; width: 100%; }
+/* The base sheet has `table { border-collapse: collapse }` but no width; the global block
+   rule this page replaces is what stretched it. Restate it so the table fills the column. */
+table { width: 100%; }
 
 td, th {
 	padding: 0.4em 0.5em;
@@ -363,8 +291,6 @@ td, th {
 }
 
 th { font-weight: 700; background: var(--surface); }
-thead th { border-bottom-width: 2px; }
-tbody tr:nth-child(even) { background: var(--surface); }
 tbody tr:hover { box-shadow: inset 3px 0 0 var(--accent); }
 
 /* Every other row is --surface, where the base link colour is only 4.23:1. */
@@ -453,38 +379,6 @@ footer {
 }
 
 footer p { margin: 6px 0; }
-
-/* In-page anchor targets stop short of the viewport edge instead of sitting flush. */
-[id] { scroll-margin-top: 1em; }
-
-/* ── Accessibility helpers (from the lab base sheet) ── */
-.visually-hidden {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	margin: -1px;
-	padding: 0;
-	border: 0;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	clip-path: inset(50%);
-	white-space: nowrap;
-}
-
-.skip-link:focus {
-	position: fixed;
-	top: 0.5em;
-	left: 0.5em;
-	width: auto;
-	height: auto;
-	margin: 0;
-	padding: 0.5em 1em;
-	clip: auto;
-	clip-path: none;
-	background: var(--surface);
-	border: 1px solid var(--border-strong);
-	z-index: 100;
-}
 
 /* ── Printing ── */
 @media print {
