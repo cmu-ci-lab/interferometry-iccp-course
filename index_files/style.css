@@ -104,18 +104,21 @@ p, ul, ol, iframe, table, figure, pre {
 
 li { margin: revert; }
 
-/* The base sheet gives every <video> the content-column width, which is right for a paper
-   or course page but not here: this guide authors each clip's display size with the HTML
-   width attribute, and that is a presentational hint, so *any* author-level width
-   declaration beats it. Without these the clips jump to their intrinsic resolution - the
-   540x960 phone captures rendered at 540px instead of 300px, which alone added ~1400px to
-   each of Parts 2 and 3. A new clip needs its width adding here. */
+/* Clip sizing.
+
+   Each <video> carries its intrinsic resolution in width/height, which is what those
+   attributes are for: the browser reserves the right box from the aspect ratio before the
+   file loads. Display size lives here, in a class, because the base sheet gives every
+   video the content-column width - correct for a paper or course page - and any
+   author-level width declaration beats the attribute, which is only a presentational
+   hint. A clip with neither a class nor a sizing container would fall back to the base
+   sheet's full-column width, not to its intrinsic size. */
 video { margin: revert; }
-video[width="300"]  { width: 300px; }
-video[width="540"]  { width: 540px; }
-video[width="560"]  { width: 560px; }
-video[width="640"]  { width: 640px; }
-video[width="1428"] { width: 1428px; }
+
+.clip { width: 560px; }                 /* landscape visualizer screen recording */
+.clip-wide { width: 640px; }            /* the results clip, shown larger */
+.clip-portrait { width: 300px; }        /* portrait hardware capture */
+.vidgrid video { width: 100%; }         /* sized by the grid's flex item */
 
 pre { width: revert; }
 
