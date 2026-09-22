@@ -18,7 +18,6 @@
 	--bg:          #fff;
 	--sidebar:     #f0f0f0;
 	--surface:     #f0f0f0;
-	--surface-2:   #d0d0d0;
 	--line:        #ddd;
 	--line-strong: #c0c0c0;
 	--text:        #000;
@@ -44,7 +43,6 @@
 		--bg:          #141414;
 		--sidebar:     #1e1e1e;
 		--surface:     #1e1e1e;
-		--surface-2:   #2a2a2a;
 		--line:        #333;
 		--line-strong: #4a4a4a;
 		--text:        #eee;
@@ -297,6 +295,27 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
 	.figrow { flex-wrap: wrap; }
 	.figrow > .depth, .figrow > .transient { flex: 1 1 100%; }
 }
+
+/* ── Option cards ──
+   A row of mutually exclusive choices (which environment to build, how to activate it).
+   The accent top rule marks the recommended option; the rest stay neutral, so the page
+   keeps to the lab's two-colour system. Labels use the -on-surface variants because the
+   cards sit on --surface, where the base link/accent tokens fall below 4.5:1. */
+.optionrow { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+.optioncard {
+	flex: 1 1 220px; min-width: 0;
+	border: 1px solid var(--line-strong);
+	border-top: 3px solid var(--line-strong);
+	border-radius: 0.25em;
+	padding: 12px 14px;
+	background: var(--surface);
+}
+.optionrow.wide > .optioncard { flex-basis: 260px; }
+.optioncard > p { margin: 0 0 6px; }
+.optioncard > pre { margin: 0; }
+.optioncard .label { color: var(--link-on-surface); }
+.optioncard.recommended { border-top-color: var(--accent); }
+.optioncard.recommended .label { color: var(--accent-on-surface); }
 
 /* ── Callouts ── */
 .note, .warn {

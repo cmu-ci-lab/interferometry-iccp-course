@@ -276,31 +276,31 @@ git clone https://github.com/cmu-ci-lab/summer-school.git
 cd summer-school</code></pre>
       <p>Then build the Python environment. Pick <strong>one</strong> of the three options below (see
       <a href="#software">Software installations</a> for the full details):</p>
-      <div style="display:flex;flex-wrap:wrap;gap:12px;margin:12px 0">
-        <div style="flex:1 1 220px;min-width:0;border:1px solid var(--line);border-top:3px solid var(--green);border-radius:10px;padding:12px 14px;background:var(--surface)">
-          <p style="margin:0 0 6px"><strong style="color:var(--green)">Option 1 — Recommended</strong><br>Let the script decide (conda if you have it, else a <code>.venv</code>):</p>
-<pre style="margin:0"><code>./setup.sh</code></pre>
+      <div class="optionrow">
+        <div class="optioncard recommended">
+          <p><strong class="label">Option 1 — Recommended</strong><br>Let the script decide (conda if you have it, else a <code>.venv</code>):</p>
+<pre><code>./setup.sh</code></pre>
         </div>
-        <div style="flex:1 1 220px;min-width:0;border:1px solid var(--line);border-top:3px solid var(--violet);border-radius:10px;padding:12px 14px;background:var(--surface)">
-          <p style="margin:0 0 6px"><strong style="color:var(--violet)">Option 2 — Don't want conda?</strong><br>Force a plain <code>.venv</code>, even if conda is installed:</p>
-<pre style="margin:0"><code>FORCE_VENV=1 ./setup.sh</code></pre>
+        <div class="optioncard">
+          <p><strong class="label">Option 2 — Don't want conda?</strong><br>Force a plain <code>.venv</code>, even if conda is installed:</p>
+<pre><code>FORCE_VENV=1 ./setup.sh</code></pre>
         </div>
-        <div style="flex:1 1 220px;min-width:0;border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:10px;padding:12px 14px;background:var(--surface)">
-          <p style="margin:0 0 6px"><strong style="color:var(--blue)">Option 3 — Manual conda</strong><br>Skip the script and build the env yourself (needs conda):</p>
-<pre style="margin:0"><code>conda env create -f environment.yml</code></pre>
+        <div class="optioncard">
+          <p><strong class="label">Option 3 — Manual conda</strong><br>Skip the script and build the env yourself (needs conda):</p>
+<pre><code>conda env create -f environment.yml</code></pre>
         </div>
       </div>
       <p>Then activate the environment. <strong>Which command you use depends on which kind of
       environment <code>setup.sh</code> built</strong> — it prints the right one when it finishes
       (conda is preferred when you have it; otherwise it creates a <code>.venv</code>):</p>
-      <div style="display:flex;flex-wrap:wrap;gap:12px;margin:12px 0">
-        <div style="flex:1 1 260px;min-width:0;border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:10px;padding:12px 14px;background:var(--surface)">
-          <p style="margin:0 0 6px"><strong style="color:var(--blue)">Got conda?</strong> — setup.sh made a conda env:</p>
-<pre style="margin:0"><code>conda activate iccp-oct</code></pre>
+      <div class="optionrow wide">
+        <div class="optioncard">
+          <p><strong class="label">Got conda?</strong> — setup.sh made a conda env:</p>
+<pre><code>conda activate iccp-oct</code></pre>
         </div>
-        <div style="flex:1 1 260px;min-width:0;border:1px solid var(--line);border-top:3px solid var(--violet);border-radius:10px;padding:12px 14px;background:var(--surface)">
-          <p style="margin:0 0 6px"><strong style="color:var(--violet)">No conda?</strong> — setup.sh made a <code>.venv</code>:</p>
-<pre style="margin:0"><code>source .venv/bin/activate
+        <div class="optioncard">
+          <p><strong class="label">No conda?</strong> — setup.sh made a <code>.venv</code>:</p>
+<pre><code>source .venv/bin/activate
 <span class="cm"># Windows: .venv\Scripts\activate</span></code></pre>
         </div>
       </div>
