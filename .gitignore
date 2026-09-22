@@ -21,3 +21,10 @@ live_view_captures/
 last_exposure.json
 last_patch.json
 oct_crop_scans/
+
+# Avenir Next Pro is licensed (MyFonts webfont kit) and this repository is public.
+# The four faces must never be committed - see shared/fonts/AvenirNext/LICENSE.txt,
+# which is tracked so it is clear what belongs in that directory. Drop the .woff2
+# files in locally and the guide renders in the lab's body font; without them it
+# falls back to Lato, which is committed.
+shared/fonts/AvenirNext/*.woff2

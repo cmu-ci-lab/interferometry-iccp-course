@@ -60,24 +60,26 @@
 /* ── Fonts ──
    Lato is self-hosted (SIL Open Font License, see shared/fonts/Lato/OFL.txt).
 
-   The body font stack asks for Avenir Next Pro first, then the system 'Avenir Next'
-   that ships with macOS and iOS, then Lato. Lab pages render in Avenir Next Pro, which
-   is licensed and cannot be committed to this public repository — so on Apple devices
-   readers get genuine Avenir Next from the system, and everyone else gets Lato, which
-   is the lab sheet's own declared fallback.
+   Avenir Next Pro is the lab's body font, but it is licensed and this repository is
+   public, so the four .woff2 faces are gitignored (see shared/fonts/AvenirNext/LICENSE.txt
+   and .gitignore). Drop them into shared/fonts/AvenirNext/ locally and this page renders
+   in the same face as the lab pages; on GitHub Pages, where they are absent, the requests
+   404 and font-display: swap falls straight through to Lato. That is the same arrangement
+   the lab templates use.
 
-   To serve the real Avenir Next Pro to every visitor, uncomment the block below and add
-   an Access-Control-Allow-Origin header for *.woff2 on imaging.cs.cmu.edu. Check your
-   MyFonts license first: the kit was licensed for that domain, and this would serve it
-   to pages on github.io. Keep the Lato faces either way — students open this guide from
-   a local clone during the lab, where a cross-origin fetch may not be reachable.
+   The stack also names the system 'Avenir Next' that ships with macOS and iOS, so Apple
+   readers get the right face whether or not the webfont is there.
 
+   To serve the real faces to every visitor instead, point these src URLs at
+   https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/ and add an
+   Access-Control-Allow-Origin header for *.woff2 there - but check the MyFonts license
+   first, since the kit was licensed for that domain, not for github.io. */
 @font-face {
 	font-family: 'Avenir Next Pro';
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
-	src: url(https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/avenirnext-regular.woff2) format('woff2');
+	src: url(../shared/fonts/AvenirNext/avenirnext-regular.woff2) format('woff2');
 }
 
 @font-face {
@@ -85,7 +87,7 @@
 	font-style: normal;
 	font-weight: 700;
 	font-display: swap;
-	src: url(https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/avenirnext-demi.woff2) format('woff2');
+	src: url(../shared/fonts/AvenirNext/avenirnext-demi.woff2) format('woff2');
 }
 
 @font-face {
@@ -93,7 +95,7 @@
 	font-style: italic;
 	font-weight: 400;
 	font-display: swap;
-	src: url(https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/avenirnext-italic.woff2) format('woff2');
+	src: url(../shared/fonts/AvenirNext/avenirnext-italic.woff2) format('woff2');
 }
 
 @font-face {
@@ -101,9 +103,8 @@
 	font-style: italic;
 	font-weight: 700;
 	font-display: swap;
-	src: url(https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/avenirnext-demiitalic.woff2) format('woff2');
+	src: url(../shared/fonts/AvenirNext/avenirnext-demiitalic.woff2) format('woff2');
 }
-*/
 
 @font-face {
 	font-family: 'Lato';
