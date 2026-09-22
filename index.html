@@ -108,7 +108,7 @@
     <div class="figrow">
       <figure class="depth"><img src="instructions_media/depth_correct.jpg" width="820" height="709" alt="Micron-scale OCT depth map of a coin" loading="lazy">
       <figcaption>A micron-scale depth map of a coin, recovered by your scanner.</figcaption></figure>
-      <figure class="transient"><video src="instructions_media/oct_contrast_video.mp4" controls muted loop playsinline width="1428" height="798" poster="instructions_media/posters/oct_contrast_video.jpg" preload="none"></video>
+      <figure class="transient"><video src="instructions_media/oct_contrast_video.mp4" controls muted loop playsinline width="1428" height="798" poster="instructions_media/posters/oct_contrast_video.jpg" preload="none" data-noautoplay></video>
       <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Visualizing the temporal coherence allows for
       pseudo-transient imaging — raw frames left, interference contrast right.</figcaption></figure>
     </div>
@@ -822,7 +822,7 @@ python oct_scan.py --center 12.3 --range-mm 0.9 --step-mm 0.003</code></pre>
 <pre><code>python oct_contrast_video.py -s oct_scans/stack_&lt;timestamp&gt;.npy
 <span class="dim"># -n 2 downsamples for speed; --fps and -o control the output movie</span></code></pre>
           <figure>
-            <video src="instructions_media/oct_contrast_video.mp4" controls muted loop playsinline width="640" height="358" poster="instructions_media/posters/oct_contrast_video.jpg" preload="none"></video>
+            <video src="instructions_media/oct_contrast_video.mp4" controls muted loop playsinline width="640" height="358" poster="instructions_media/posters/oct_contrast_video.jpg" preload="none" data-noautoplay></video>
             <figcaption><span class="vid-badge"><i class="fa-solid fa-circle-play" aria-hidden="true"></i>&nbsp;video</span>Raw frames (left) vs interference amplitude
             (right) for a coin scan — the contrast band sweeping across the surface is the coherence gate
             crossing each pixel's depth; its per-pixel peak position is the depth map.</figcaption>
@@ -997,7 +997,8 @@ source .venv/bin/activate        <span class="cm"># Windows: .venv\Scripts\activ
 <script>
   // Auto-play videos as they scroll into view (and pause when they leave).
   // Videos are muted, so browsers allow programmatic play. Skipped when the
-  // user prefers reduced motion.
+  // user prefers reduced motion, and for clips marked data-noautoplay - playing
+  // one downloads it, which would defeat preload="none" on the large files.
   (function () {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (!("IntersectionObserver" in window)) return;
@@ -1012,7 +1013,7 @@ source .venv/bin/activate        <span class="cm"># Windows: .venv\Scripts\activ
         }
       });
     }, { threshold: 0.4 });
-    document.querySelectorAll("video").forEach(function (v) { io.observe(v); });
+    document.querySelectorAll("video:not([data-noautoplay])").forEach(function (v) { io.observe(v); });
   })();
 </script>
 </body>
