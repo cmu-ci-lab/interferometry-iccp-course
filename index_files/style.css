@@ -172,7 +172,10 @@ body {
 	box-sizing: border-box;
 	position: sticky; top: 0; height: 100vh; overflow-y: auto;
 }
-.content { flex: 1; min-width: 0; padding: 40px 48px 96px; box-sizing: border-box; }
+/* Top padding is 16px to match the templates' `body { padding: 1em }`, so the logo, title
+   and venue sit at the same height here as on a lab course page. The side and bottom
+   padding stay larger: this column has a sidebar beside it, not a centred page margin. */
+.content { flex: 1; min-width: 0; padding: 16px 48px 96px; box-sizing: border-box; }
 .content-inner { max-width: 76ch; }
 
 /* The sidebar has to fold away well before the lab sheet's 48em breakpoint: it is a
