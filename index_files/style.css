@@ -1,26 +1,11 @@
 /* ICCP summer-school lab guide — page-specific styles.
-
-   The design tokens below mirror :root in the Carnegie Mellon computational imaging lab
-   base sheet (website_templates/shared/style.css), so this guide reads as part of the
-   same family as the lab's course, paper, tutorial and personal pages. The layout itself
-   — sidebar table of contents, numbered step cards, callouts, theory panels — is
-   specific to this long-form guide and has no counterpart in the base sheet.
-
-   This is a vendored look-alike rather than an import of the base sheet: that sheet is
-   served at /shared/ under the imaging.cs.cmu.edu docroot, and this site is published
-   from a different origin at a project subpath (cmu-ci-lab.github.io/summer-school/),
-   where a root-absolute /shared/ URL does not resolve.
+   Load after https://imaging.cs.cmu.edu/shared/style.css.
 */
 
 /* ── Palette (light) ── */
 :root {
 	color-scheme: light dark;
 
-	/* Specific to this guide. The base sheet has no equivalents: it is light-only, so it
-	   needs no explicit page background, and it has no long-form components that call for a
-	   secondary or muted text tone. The -on-surface pair are the shared hues darkened just
-	   enough to clear WCAG AA on the --surface grey that callouts, code blocks and theory
-	   panels sit on (#b35500 is 4.37:1 there, #1772d0 is 4.23:1). */
 	--bg:                #fff;
 	--text-2:            #444;
 	--muted:             #666;
@@ -29,10 +14,7 @@
 	--accent-on-surface: #af5300;
 }
 
-/* ── Palette (dark) ──
-   Same hues as above, lifted in lightness so every foreground/background pair clears
-   WCAG AA (4.5:1) on the dark surfaces. The lab base sheet is light-only; this guide is
-   long enough to be read in a dim optics room, so both schemes are maintained here. */
+/* ── Palette (dark) ── */
 @media (prefers-color-scheme: dark) {
 	:root {
 		--text:          #eee;
@@ -52,23 +34,9 @@
 	}
 }
 
-/* ── Fonts ──
-   Lato is self-hosted (SIL Open Font License, see shared/fonts/Lato/OFL.txt).
-
-   Avenir Next Pro is the lab's body font, but it is licensed and this repository is
-   public, so the four .woff2 faces are gitignored (see shared/fonts/AvenirNext/LICENSE.txt
-   and .gitignore). Drop them into shared/fonts/AvenirNext/ locally and this page renders
-   in the same face as the lab pages; on GitHub Pages, where they are absent, the requests
-   404 and font-display: swap falls straight through to Lato. That is the same arrangement
-   the lab templates use.
-
-   The stack also names the system 'Avenir Next' that ships with macOS and iOS, so Apple
-   readers get the right face whether or not the webfont is there.
-
-   To serve the real faces to every visitor instead, point these src URLs at
-   https://imaging.cs.cmu.edu/shared/fonts/AvenirNext/ and add an
-   Access-Control-Allow-Origin header for *.woff2 there - but check the MyFonts license
-   first, since the kit was licensed for that domain, not for github.io. */
+/* Fonts are declared in the CMU-hosted shared stylesheet. Its relative font
+   URLs resolve under https://imaging.cs.cmu.edu/shared/fonts/.
+*/
 img, video {
 	max-width: 100%;
 	height: auto;
@@ -76,17 +44,7 @@ img, video {
 
 html { background: var(--bg); scroll-padding-top: 24px; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-/* ── Undo the base sheet's single-column page ──
-   The base sheet lays out a centred 60em page: it caps the body width, indents every block
-   element 1em from the left, justifies it and sizes it at calc(100% - 1em). This page is a
-   flex layout with a sidebar, and its figure grids, option cards and video rows are flex
-   children that those widths break.
 
-   `revert` rolls these back to the browser defaults the components below were built
-   against, rather than zeroing the indent and keeping the base sheet's block margins:
-   those margins also land on nested lists and on paragraphs inside list items, which grew
-   Parts 2 and 3 by about 1400px each. Font, colour, leading, and every component the base
-   sheet defines still come from it - only its block-layout model is replaced. */
 body {
 	background: var(--bg);
 	/* Long paths and command lines in inline code must not force a horizontal scroll. */
@@ -96,6 +54,8 @@ body {
 	padding: 0;
 }
 
+/* `revert`, not zeroed: the base sheet's block margins also land on nested lists and on
+   paragraphs inside list items, which added ~1400px to each of Parts 2 and 3. */
 p, ul, ol, iframe, table, figure, pre {
 	text-align: revert;
 	margin: revert;
@@ -104,15 +64,6 @@ p, ul, ol, iframe, table, figure, pre {
 
 li { margin: revert; }
 
-/* Clip sizing.
-
-   Each <video> carries its intrinsic resolution in width/height, which is what those
-   attributes are for: the browser reserves the right box from the aspect ratio before the
-   file loads. Display size lives here, in a class, because the base sheet gives every
-   video the content-column width - correct for a paper or course page - and any
-   author-level width declaration beats the attribute, which is only a presentational
-   hint. A clip with neither a class nor a sizing container would fall back to the base
-   sheet's full-column width, not to its intrinsic size. */
 video { margin: revert; }
 
 .clip { width: 560px; }                 /* landscape visualizer screen recording */
@@ -132,9 +83,6 @@ pre { width: revert; }
 	box-sizing: border-box;
 	position: sticky; top: 0; height: 100vh; overflow-y: auto;
 }
-/* Top padding is 16px to match the templates' `body { padding: 1em }`, so the logo, title
-   and venue sit at the same height here as on a lab course page. The side and bottom
-   padding stay larger: this column has a sidebar beside it, not a centred page margin. */
 .content { flex: 1; min-width: 0; padding: 16px 48px 96px; box-sizing: border-box; }
 .content-inner { max-width: 76ch; }
 
@@ -161,11 +109,7 @@ a.side-title:hover, a.side-title:focus { color: var(--accent); }
 .sidebar nav a:hover, .sidebar nav a:focus { background: var(--bg); color: var(--accent); }
 .side-num { display: inline-block; width: 1.4em; color: var(--muted); font-variant-numeric: tabular-nums; }
 
-/* ── Header ──
-   #logo, .venue and .skip-link now come from the base sheet unchanged. What is left here
-   is the page title, the lead sentence the templates have no equivalent for, and the
-   details list's box - the base sheet sizes and de-bullets ul.details but leaves its
-   padding and margins to the global block rule this page replaces. */
+/* ── Header ── */
 h1 {
 	font-size: 2em;
 	margin: 0.67em 0;
@@ -190,10 +134,15 @@ ul.details > li { margin: 0 1em 0.5em 0; }
 	display: flex; align-items: baseline; gap: 12px;
 	margin: 56px 0 8px; padding-top: 24px; border-top: 2px solid var(--border-strong);
 }
+
+/* Optical, not arbitrary: Avenir Next Pro's cap band centres font-size x 0.109 above the
+   line box's centre, so the padding is asymmetric on purpose; top: -5px is half the
+   cap-height difference between the 11.5px label and the 26px h2. Don't symmetrise. */
 .part-tag {
 	font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-	color: var(--bg); background: var(--accent); padding: 3px 10px; border-radius: 999px;
+	color: var(--bg); background: var(--accent); padding: 4.5px 10px 1.5px; border-radius: 999px;
 	white-space: nowrap;
+	position: relative; top: -5px;
 }
 .part h2 { font-size: 26px; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
 .part-note { color: var(--text-2); font-size: 14.5px; margin: 4px 0 24px; }
@@ -203,11 +152,16 @@ ul.details > li { margin: 0 1em 0.5em 0; }
 	font-size: 19px; margin: 0 0 10px; display: flex; align-items: center; gap: 10px;
 	text-wrap: balance;
 }
+
+/* Same cap-band offset (font-size x 0.109): padding-top centres the digit in the ring,
+   and top: -2px puts the ring on one centre line with the 19px heading beside it. */
 .step-num {
-	flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%;
+	box-sizing: border-box;
+	flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; padding-top: 3px;
 	background: var(--surface); border: 1px solid var(--border-strong); color: var(--text-2);
 	font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
 	font-variant-numeric: tabular-nums;
+	position: relative; top: -2px;
 }
 .step h4 {
 	font-size: 16.5px; margin: 26px 0 8px; padding-bottom: 4px;
@@ -224,11 +178,13 @@ figure video {
 	border-radius: 0.25em; border: 1px solid var(--border-strong);
 	display: block; max-width: 100%; height: auto; background: #000;
 }
+/* Cap-band offset again, plus line-height: 1 — the Font Awesome glyph reaches 0.857em
+   above the baseline and would otherwise set a taller line box than the 10.5px text. */
 .vid-badge {
 	display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
 	text-transform: uppercase; color: var(--accent-on-surface);
 	border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-	border-radius: 999px; padding: 0 8px; margin-right: 6px; vertical-align: 1px;
+	border-radius: 999px; line-height: 1; padding: 2px 8px 0; margin-right: 6px; vertical-align: 1px;
 }
 .vidgrid { display: flex; flex-wrap: wrap; gap: 14px; margin: 12px 0; }
 .vidgrid figure { flex: 0 1 260px; min-width: 0; margin: 0; }
@@ -254,11 +210,7 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
 	.figrow > .depth, .figrow > .transient { flex: 1 1 100%; }
 }
 
-/* ── Option cards ──
-   A row of mutually exclusive choices (which environment to build, how to activate it).
-   The accent top rule marks the recommended option; the rest stay neutral, so the page
-   keeps to the lab's two-colour system. Labels use the -on-surface variants because the
-   cards sit on --surface, where the base link/accent tokens fall below 4.5:1. */
+/* ── Option cards ── */
 .optionrow { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
 .optioncard {
 	flex: 1 1 220px; min-width: 0;
@@ -275,15 +227,7 @@ figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
 .optioncard.recommended { border-top-color: var(--accent); }
 .optioncard.recommended .label { color: var(--accent-on-surface); }
 
-/* ── Tables ──
-   Mirrors the lab base sheet: collapsed borders, a shaded header row with a heavier rule
-   under it, and zebra striping. One deliberate divergence — the base sheet's
-   `tbody tr:hover` swaps in a grey background, and no grey light enough to sit behind a
-   link at 4.5:1 is still distinguishable from the zebra stripe (#1772d0 on #d0d0d0 is
-   3.13:1). The row marker here is an inset rule instead, reusing the left-accent idiom
-   the theory panel already uses, so hover costs no contrast. */
-/* The base sheet has `table { border-collapse: collapse }` but no width; the global block
-   rule this page replaces is what stretched it. Restate it so the table fills the column. */
+/* ── Tables ── */
 table { width: 100%; }
 
 td, th {
@@ -294,11 +238,21 @@ td, th {
 }
 
 th { font-weight: 700; background: var(--surface); }
-tbody tr:hover { box-shadow: inset 3px 0 0 var(--accent); }
+tbody tr:hover {
+	background-color: transparent;
+	box-shadow: inset 3px 0 0 var(--accent);
+}
+tbody tr:nth-child(even):hover { background-color: var(--surface); }
 
 /* Every other row is --surface, where the base link colour is only 4.23:1. */
 td a { color: var(--link-on-surface); }
 td a:hover, td a:focus, td a:active { color: var(--accent-on-surface); }
+
+/* Second line under a part name in the appendix list. The parts spreadsheet carries a
+   notes column, but a fourth column would push the table into the horizontal scroller,
+   and a note qualifies its own item, so it rides with it instead. --muted clears AA on
+   the plain row and on the zebra-striped one alike (5.05:1 on #f0f0f0). */
+.item-note { display: block; font-size: 90%; color: var(--muted); }
 
 /* Lets a wide table scroll sideways without dropping its table semantics. */
 .table-wrap { overflow-x: auto; margin: 12px 0; }
@@ -364,8 +318,16 @@ kbd {
 /* ── Misc ── */
 a { color: var(--link); text-decoration: none; }
 a:focus, a:hover, a:active { color: var(--accent); text-decoration: none; }
-.note a:hover, .note a:focus, .warn a:hover, .warn a:focus,
-.theory a:hover, .theory a:focus, pre a:hover, pre a:focus { color: var(--accent-on-surface); }
+.note a, .warn a, .theory a, .optioncard a, pre a {
+	color: var(--link-on-surface);
+}
+.note a:hover, .note a:focus, .note a:active,
+.warn a:hover, .warn a:focus, .warn a:active,
+.theory a:hover, .theory a:focus, .theory a:active,
+.optioncard a:hover, .optioncard a:focus, .optioncard a:active,
+pre a:hover, pre a:focus, pre a:active {
+	color: var(--accent-on-surface);
+}
 hr.soft { border: none; border-top: 1px solid var(--border-soft); margin: 48px 0 0; }
 ul.plain { padding-left: 22px; }
 ul.plain li { margin: 6px 0; }
@@ -385,6 +347,24 @@ footer p { margin: 6px 0; }
 
 /* ── Printing ── */
 @media print {
+	:root {
+		color-scheme: light;
+		--bg: #fff;
+		--text: #000;
+		--text-2: #333;
+		--muted: #555;
+		--link: #000;
+		--accent: #000;
+		--surface: #fff;
+		--border-strong: #888;
+		--border-soft: #ccc;
+		--award-bg: #fff;
+		--kbd-bg: #fff;
+		--link-on-surface: #000;
+		--accent-on-surface: #000;
+		--button-hover: #fff;
+	}
+	html, body { background: #fff; }
 	body { color: #000; }
 	.layout { display: block; }
 	.sidebar { display: none; }
